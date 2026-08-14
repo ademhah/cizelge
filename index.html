@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="paper">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Çizelge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Carlito:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --panel:#ffffff; --sunk:#F7F8F6;
+  --grid:#DADED7; --grid2:#EAEDE8;
+  --band:#FDF1CE; --band-line:#E9D9A4; --band-ink:#7A6520;
+  --ink:#1E2320; --muted:#57615B; --faint:#9AA39E;
+  --good-bg:#C6EFCE; --good-ink:#1B6B33;
+  --mid-bg:#FFEB9C; --mid-ink:#8A5400;
+  --bad-bg:#FFC7CE; --bad-ink:#9C0006;
+  --na:#F0F2EF;
+  --sel:#2F7D46;
+}
+[data-theme="night"]{
+  --bg:#101512; --panel:#151B17; --sunk:#111713;
+  --grid:#2B342E; --grid2:#212925;
+  --band:#2E2814; --band-line:#453B1C; --band-ink:#D8B45E;
+  --ink:#E6EBE6; --muted:#8A958F; --faint:#5D6863;
+  --good-bg:#1E4A2A; --good-ink:#7FDB9B;
+  --mid-bg:#4A3D14; --mid-ink:#E4BC64;
+  --bad-bg:#4C1F22; --bad-ink:#F0908F;
+  --na:#181E1A;
+  --sel:#7FDB9B;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:Carlito,Calibri,'Segoe UI',system-ui,sans-serif;
+  font-size:15px;line-height:1.4;padding:0 0 78px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 12px}
+
+/* ---- top bar ---- */
+.top{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 0 12px;border-bottom:1px solid var(--grid);margin-bottom:14px;
+}
+.brand{font-weight:700;font-size:17px;letter-spacing:.02em}
+.brand span{color:var(--muted);font-weight:400;font-size:13px;margin-left:7px}
+.sp{flex:1}
+
+
+/* ---- the sheet ---- */
+.sheetbox{
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--grid);background:var(--panel);
+}
+table.mo{border-collapse:collapse;table-layout:fixed}
+table.mo+table.mo{margin-top:0}
+.mo th,.mo td{padding:0;text-align:center;font-weight:400}
+.mo th.lbl,.mo td.lbl{
+  position:sticky;left:0;z-index:3;background:var(--panel);
+  width:128px;min-width:128px;max-width:128px;
+  text-align:left;padding:0 7px 0 8px;font-size:12.5px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  border-right:1px solid var(--grid);
+}
+.mo thead th{
+  height:22px;background:var(--band);color:var(--band-ink);
+  font-size:11px;font-weight:700;
+  border-bottom:1px solid var(--band-line);border-right:1px solid var(--band-line);
+}
+.mo thead th.lbl{
+  background:var(--band);font-size:12px;font-weight:700;color:var(--band-ink);
+  border-right:1px solid var(--band-line);
+}
+.mo thead th.nb{background:var(--mid-bg);color:var(--mid-ink)}
+.mo thead th.td{box-shadow:inset 0 0 0 2px var(--sel)}
+.mo tbody td{
+  width:21px;min-width:21px;height:24px;
+  border-bottom:1px solid var(--grid2);border-right:1px solid var(--grid2);
+  cursor:pointer;
+}
+.mo tbody td.lbl{cursor:default;border-bottom:1px solid var(--grid2)}
+.mo tbody tr:last-child td{border-bottom:1px solid var(--grid)}
+.mo tbody td.na{background:var(--na);cursor:default}
+.mo tbody td.td{box-shadow:inset 0 0 0 2px var(--sel)}
+.chk{display:inline-block;width:13px;height:13px;border:1px solid var(--faint);border-radius:1px;vertical-align:middle;position:relative;background:transparent}
+.chk.on{background:var(--good-bg);border-color:var(--good-ink)}
+.chk.x{background:var(--bad-bg);border-color:var(--bad-ink)}
+.chk.x::before,.chk.x::after{content:'';position:absolute;left:5px;top:1px;width:1.5px;height:9px;background:var(--bad-ink);border-radius:1px}
+.chk.x::before{transform:rotate(45deg)}
+.chk.x::after{transform:rotate(-45deg)}
+.tag.lg[aria-pressed="true"]{background:var(--sunk);border-color:var(--faint);color:var(--muted)}
+.chk.on::after{
+  content:'';position:absolute;left:3.5px;top:.5px;width:4px;height:8px;
+  border:solid var(--good-ink);border-width:0 2px 2px 0;transform:rotate(43deg);
+}
+.mo tr.score td{
+  height:23px;font-size:11.5px;font-weight:700;color:var(--muted);
+  border-top:1px solid var(--grid);border-right:1px solid var(--grid2);
+  background:var(--panel);cursor:default;
+}
+.mo tr.score td.lbl{font-size:12px;font-weight:700;color:var(--ink);background:var(--panel)}
+.mo tr.score td.s3{background:var(--good-bg);color:var(--good-ink)}
+.mo tr.score td.s2{background:color-mix(in srgb,var(--good-bg) 55%,var(--panel));color:var(--good-ink)}
+.mo tr.score td.s1{background:var(--mid-bg);color:var(--mid-ink)}
+.mo tr.score td.s0{background:var(--bad-bg);color:var(--bad-ink)}
+.mo tr.score td.nolog{color:var(--faint);font-weight:400}
+.gap{height:9px;background:var(--sunk)}
+
+.legend{
+  display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;
+  font-size:11.5px;color:var(--muted);align-items:center;
+}
+.legend i{display:inline-block;width:11px;height:11px;border:1px solid var(--faint);vertical-align:-1px;margin-right:5px;border-radius:1px}
+.legend i.g{background:var(--good-bg);border-color:var(--good-ink)}
+.legend i.x{background:var(--bad-bg);border-color:var(--bad-ink)}
+.legend i.n{background:var(--na);border-color:var(--grid)}
+.legend i.b{background:var(--mid-bg);border-color:var(--band-line)}
+.targets{margin-top:9px;padding:8px 11px;background:var(--sunk);border:1px solid var(--grid2);font-size:12.5px;color:var(--muted)}
+.targets b{color:var(--ink);font-weight:700}
+
+/* ---- today strip ---- */
+section{margin:24px 0}
+.hd{
+  font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+}
+.today{border:1px solid var(--grid);background:var(--panel)}
+.trow{display:flex;align-items:center;gap:10px;padding:10px 11px;border-bottom:1px solid var(--grid2)}
+.trow:last-child{border-bottom:0}
+.tdate{font-weight:700;font-size:16px}
+.tdate small{display:block;font-weight:400;font-size:12px;color:var(--muted);margin-top:1px}
+.tscore{margin-left:auto;font-weight:700;font-size:19px}
+.tscore.full{color:var(--good-ink)}
+.types{display:flex;gap:0;border:1px solid var(--grid);border-radius:2px;overflow:hidden}
+.types button{
+  background:var(--panel);border:0;border-right:1px solid var(--grid);color:var(--muted);
+  padding:6px 11px;font:inherit;font-size:12.5px;cursor:pointer;
+}
+.types button:last-child{border-right:0}
+.types button[aria-pressed="true"]{background:var(--mid-bg);color:var(--mid-ink);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 11px}
+.chip{
+  display:flex;align-items:center;gap:7px;background:var(--panel);
+  border:1px solid var(--grid);color:var(--ink);
+  padding:7px 11px 7px 9px;border-radius:2px;font:inherit;font-size:13.5px;cursor:pointer;
+}
+.chip[aria-pressed="true"]{background:var(--good-bg);border-color:var(--good-ink);color:var(--good-ink);font-weight:700}
+.chip .k{display:inline-block;width:12px;height:12px;border:1px solid var(--faint);border-radius:1px;position:relative;flex:0 0 auto}
+.chip[aria-pressed="true"] .k{border-color:var(--good-ink)}
+.chip[aria-pressed="true"] .k::after{content:'';position:absolute;left:3px;top:0;width:4px;height:8px;border:solid var(--good-ink);border-width:0 2px 2px 0;transform:rotate(43deg)}
+.chip .run{color:var(--bad-ink);font-size:11.5px;font-weight:700}
+
+/* ---- quotas / stats ---- */
+.tbl{border:1px solid var(--grid);background:var(--panel)}
+.q{display:flex;align-items:center;gap:10px;padding:9px 11px;border-bottom:1px solid var(--grid2)}
+.q:last-child{border-bottom:0}
+.qn{flex:1;min-width:0;font-size:14px}
+.pips{display:flex;gap:3px}
+.pip{width:12px;height:12px;border:1px solid var(--faint);border-radius:1px}
+.pip.on{background:var(--good-bg);border-color:var(--good-ink)}
+.qb{width:27px;height:27px;border:1px solid var(--grid);background:transparent;color:var(--ink);border-radius:2px;font:inherit;font-size:15px;cursor:pointer;line-height:1}
+.qb:active{background:var(--sunk)}
+.pct{font-weight:700;font-size:14px;min-width:44px;text-align:right}
+.pct small{color:var(--faint);font-weight:400}
+.pct.low{color:var(--bad-ink)}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--grid);background:var(--panel)}
+.stat{padding:11px 10px;border-right:1px solid var(--grid2)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font-size:21px;font-weight:700;line-height:1.1}
+.stat b.bad{color:var(--bad-ink)}
+.stat span{font-size:10.5px;color:var(--muted);letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+
+.note{margin-top:10px;padding:10px 12px;border-left:3px solid var(--bad-ink);background:var(--bad-bg);color:var(--bad-ink);font-size:13.5px}
+.note.warn{border-color:var(--mid-ink);background:var(--mid-bg);color:var(--mid-ink)}
+.note ul{margin:6px 0 0;padding-left:17px;font-size:12.5px}
+.note li{margin:2px 0}
+.hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
+
+/* ---- editor ---- */
+.edit{border:1px solid var(--grid);background:var(--panel);padding:12px}
+.er{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--grid2)}
+.er:last-of-type{border-bottom:0}
+.er input[type=text]{flex:1;min-width:0;background:var(--bg);border:1px solid var(--grid);color:var(--ink);padding:6px 8px;border-radius:2px;font:inherit;font-size:14px}
+.er input[type=number]{width:44px;background:var(--bg);border:1px solid var(--grid);color:var(--ink);padding:6px 4px;border-radius:2px;font:inherit;font-size:14px;text-align:center}
+.tags{display:flex;gap:3px}
+.tag{width:26px;height:26px;border:1px solid var(--grid);background:transparent;color:var(--faint);border-radius:2px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.tag[aria-pressed="true"]{background:var(--mid-bg);border-color:var(--mid-ink);color:var(--mid-ink)}
+.del{background:transparent;border:0;color:var(--faint);font-size:17px;cursor:pointer;padding:2px 3px;line-height:1}
+.btn,.tbtn{
+  background:var(--sunk);border:1px solid var(--grid);color:var(--ink);
+  padding:7px 13px;border-radius:2px;cursor:pointer;
+  font-family:Carlito,Calibri,'Segoe UI',system-ui,sans-serif;
+  font-size:13.5px;font-weight:400;line-height:1.2;
+  text-transform:none;letter-spacing:0;
+}
+.btn:active,.tbtn:active{background:var(--grid2)}
+.tbtn{padding:5px 11px;font-size:12.5px}
+.hd .btn{margin-left:auto}
+.btnrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
+.foot{margin-top:30px;padding-top:14px;border-top:1px solid var(--grid2);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+
+/* ---- excel sheet tabs (bottom) ---- */
+.tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  display:flex;gap:2px;padding:0 10px;
+  background:var(--sunk);border-top:1px solid var(--grid);
+  padding-bottom:env(safe-area-inset-bottom,0);
+}
+.tabs button{
+  flex:1;background:var(--grid2);border:1px solid var(--grid);border-bottom:0;border-radius:2px 2px 0 0;
+  color:var(--muted);padding:11px 6px 12px;margin-top:5px;cursor:pointer;
+  font-family:Carlito,Calibri,system-ui,sans-serif;font-size:13px;line-height:1;
+}
+.tabs button[aria-selected="true"]{
+  background:var(--panel);color:var(--ink);font-weight:700;
+  border-top:2px solid var(--good-ink);margin-top:0;padding-top:12px;
+}
+
+
+/* ================= DÜŞÜNCE & BİLGİ : ayrı dünyalar ================= */
+body[data-field="mind"]{background:#14120F}
+body[data-field="info"]{background:#0C1E33}
+body[data-field] .top{display:none}
+#v-mind,#v-info{margin:0 -12px;min-height:calc(100vh - 150px);position:relative}
+#v-mind{
+  color:#EFE9DE;
+  background:
+    radial-gradient(120% 80% at 50% 0%,rgba(255,255,255,.045),transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+}
+#v-info{
+  color:#E4EDF6;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:26px 26px,26px 26px;
+}
+
+/* ---- konum şeridi ---- */
+.ticks{display:flex;gap:1px;padding:0 18px;margin-bottom:26px;height:16px;align-items:flex-end}
+.ticks i{flex:1;height:4px;background:rgba(255,255,255,.13);border-radius:0}
+.ticks i.on{height:14px;background:var(--acc,#C7A96B)}
+
+/* ---- düşünce kartı ---- */
+.thought{padding:0 20px 4px;cursor:pointer;-webkit-user-select:none;user-select:none}
+.thought .cat{
+  font-family:Carlito,sans-serif;font-size:10.5px;font-weight:700;
+  letter-spacing:.28em;text-transform:uppercase;color:var(--acc,#C7A96B);
+}
+.thought .body{
+  font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;
+  font-size:31px;line-height:1.34;letter-spacing:.004em;margin:20px 0 0;color:#F3EEE4;
+  text-wrap:balance;
+}
+.thought[data-cat="Soru"] .body{font-style:italic;font-size:27px;font-weight:400}
+.thought .rule{width:38px;height:2px;background:var(--acc,#C7A96B);margin:26px 0 13px;opacity:.85}
+.thought .src{
+  font-family:Carlito,sans-serif;font-size:13px;line-height:1.5;color:rgba(239,233,222,.52);
+}
+.thought .src b{display:block;color:rgba(239,233,222,.86);font-weight:700;font-size:13.5px}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.anim{animation:rise .45s cubic-bezier(.2,.7,.2,1)}
+
+/* kategori renkleri */
+.thought[data-cat="Stoa"],.pl[data-cat="Stoa"]{--acc:#9DB4C0}
+.thought[data-cat="Güç"]{--acc:#B0483C}
+.thought[data-cat="Savaş"]{--acc:#E2683F}
+.thought[data-cat="Nietzsche"]{--acc:#E3C34B}
+.thought[data-cat="İnsan"]{--acc:#C99BA6}
+.thought[data-cat="Doğu"]{--acc:#7FB09A}
+.thought[data-cat="Klasik"]{--acc:#C7A96B}
+.thought[data-cat="Soru"]{--acc:#6FB6D6}
+.thought[data-cat="Zaman"]{--acc:#8E9BC4}
+.thought[data-cat="Para"]{--acc:#9BAE80}
+
+/* ---- bilgi levhası ---- */
+.plate{padding:4px 20px;cursor:pointer;-webkit-user-select:none;user-select:none}
+.plate .cat{
+  font-family:Carlito,sans-serif;font-size:10.5px;font-weight:700;
+  letter-spacing:.28em;text-transform:uppercase;color:#E0A33E;
+}
+.plate .big{
+  font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;
+  font-size:76px;line-height:.92;letter-spacing:-.02em;color:#fff;margin:16px 0 0;
+}
+.plate .unit{
+  font-family:Carlito,sans-serif;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(228,237,246,.55);margin-top:9px;
+}
+.plate h3{
+  font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:26px;line-height:1.24;
+  margin:26px 0 0;color:#fff;text-wrap:balance;
+}
+.plate .fact{font-family:Carlito,sans-serif;font-size:15px;line-height:1.62;margin-top:12px;color:rgba(228,237,246,.88)}
+.plate .lim{
+  margin-top:20px;border:1px solid rgba(224,163,62,.34);border-left-width:3px;
+  background:rgba(224,163,62,.07);padding:12px 14px;
+}
+.plate .lim .k{
+  font-family:Carlito,sans-serif;font-size:10px;font-weight:700;letter-spacing:.26em;
+  text-transform:uppercase;color:#E0A33E;display:block;margin-bottom:6px;
+}
+.plate .lim p{margin:0;font-family:Carlito,sans-serif;font-size:14.5px;line-height:1.55;color:rgba(228,237,246,.9)}
+
+/* ---- iki sekmenin ortak kontrolleri ---- */
+.nav2{display:flex;gap:7px;align-items:center;margin:30px 20px 0}
+.nav2 .b2{
+  background:transparent;border:1px solid rgba(255,255,255,.22);color:inherit;
+  padding:9px 15px;border-radius:2px;cursor:pointer;
+  font-family:Carlito,sans-serif;font-size:13px;
+}
+.nav2 .b2:active{background:rgba(255,255,255,.09)}
+.nav2 .ct{margin-left:auto;font-family:Carlito,sans-serif;font-size:12px;opacity:.45}
+.chips2{display:flex;flex-wrap:wrap;gap:5px;margin:14px 20px 0}
+.chips2 button{
+  background:transparent;border:1px solid rgba(255,255,255,.17);color:inherit;opacity:.62;
+  padding:5px 11px;border-radius:2px;cursor:pointer;font-family:Carlito,sans-serif;font-size:12.5px;
+}
+.chips2 button[aria-pressed="true"]{opacity:1;border-color:rgba(255,255,255,.55);font-weight:700}
+.foot2{margin:22px 20px 0;font-family:Carlito,sans-serif;font-size:11.5px;line-height:1.6;opacity:.42}
+.daily{
+  font-family:Carlito,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.24em;
+  text-transform:uppercase;opacity:.42;padding:24px 20px 16px;
+}
+
+[hidden]{display:none !important}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 15px;border-radius:2px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .18s;z-index:50}
+.toast.show{opacity:1}
+button:focus-visible,input:focus-visible{outline:2px solid var(--sel);outline-offset:1px}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="top">
+  <div class="brand">Çizelge<span id="topSub"></span></div>
+  <div class="sp"></div>
+  <button class="tbtn" id="themeBtn">Gece</button>
+</div>
+
+<div id="v-sheet">
+<div class="sheetbox" id="sheetbox"></div>
+<div class="legend">
+  <span><i class="g"></i>yapıldı</span>
+  <span><i class="x"></i>yapılmadı</span>
+  <span><i></i>bugün · kayıt satırı</span>
+  <span>·  kayıt girilmemiş gün</span>
+  <span><i class="n"></i>o gün geçerli değil</span>
+  <span><i class="b"></i>nöbet</span>
+</div>
+<div class="targets"><b>Hedefler</b> · 1900–2000 kcal alım · 500–700 kcal açık · 170 g protein · kardiyo 20+ dk</div>
+<div class="hint">Hücreye dokun → işaretle. Gün numarasına dokun → gün tipini değiştir (normal → nöbet → çıkış).</div>
+<div class="btnrow"><button class="btn" id="moreBtn">Önceki ayı göster</button></div>
+
+<section>
+  <div class="hd"><span>Bugün</span><span id="applCount"></span></div>
+  <div class="today">
+    <div class="trow">
+      <div class="tdate" id="tDate">—<small id="tSub"></small></div>
+      <div class="types" role="group" aria-label="Gün tipi">
+        <button data-type="normal">Normal</button>
+        <button data-type="nobet">Nöbet</button>
+        <button data-type="cikis">Çıkış</button>
+      </div>
+      <div class="tscore" id="tScore">0/0</div>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+</section>
+
+<section>
+  <div class="hd"><span>Haftalık kota</span><span id="wkLbl"></span></div>
+  <div class="tbl" id="quotas"></div>
+</section>
+
+<section>
+  <div class="hd"><span>Son 30 gün</span></div>
+  <div class="stats">
+    <div class="stat"><b id="st30">—</b><span id="st30lbl">uyum</span></div>
+    <div class="stat"><b id="stStreak">—</b><span>tam gün serisi</span></div>
+    <div class="stat"><b id="stMiss">—</b><span>2 gün üst üste</span></div>
+  </div>
+  <div id="alerts"></div>
+  <div class="note warn" id="reviewBox" hidden>
+    <b>Aylık gözden geçirme.</b> Aşağıdaki satır oranlarına bak, çizelgeyi güncelle:
+    <ul>
+      <li><b>%50 altı</b> — satır fazla büyük. Küçült ya da sil.</li>
+      <li><b>%50–90</b> — doğru yerde. Dokunma.</li>
+      <li><b>%95+ iki ay üst üste</b> — yerleşti. Çıkar, yerine yeni bir şey koy.</li>
+    </ul>
+    <div class="btnrow"><button class="btn" id="dismissReview">Gözden geçirdim</button></div>
+  </div>
+</section>
+
+<section>
+  <div class="hd"><span>Satır uyumu · 30 gün</span></div>
+  <div class="tbl" id="perHabit"></div>
+</section>
+
+<section>
+  <div class="hd"><span>Çizelgeyi düzenle</span><button class="btn" id="toggleEdit">Aç</button></div>
+  <div class="edit" id="editor" hidden>
+    <div class="hd" style="margin-bottom:6px"><span>Günlük satırlar · G normal · N nöbet · Ç çıkış</span></div>
+    <div id="hEdit"></div>
+    <div class="btnrow"><button class="btn" id="addHabit">+ satır ekle</button></div>
+    <div class="hd" style="margin:18px 0 6px"><span>Haftalık kotalar</span></div>
+    <div id="qEdit"></div>
+    <div class="btnrow"><button class="btn" id="addQuota">+ kota ekle</button></div>
+    <div class="hint">Dörtten fazla satırla başlama. Her satırın ölçülebilir bir eşiği olsun — "spor yap" değil, "30+ dk".</div>
+  </div>
+</section>
+
+<div class="foot">
+  <button class="btn" id="expBtn">Dışa aktar</button>
+  <button class="btn" id="impBtn">İçe aktar</button>
+  <span class="sp"></span>
+  <button class="btn" id="resetBtn">Sıfırla</button>
+</div>
+</div><!-- /v-sheet -->
+
+<div id="v-mind" hidden>
+  <div class="daily">Günün kartı · <span id="mDate"></span></div>
+  <div class="ticks" id="mTicks"></div>
+  <div class="thought" id="mCard"></div>
+  <div class="nav2">
+    <button class="b2" id="mNext">Başka bir tane</button>
+    <button class="b2" id="mToday">Günün kartı</button>
+    <span class="ct" id="mCount"></span>
+  </div>
+  <div class="chips2" id="mFilter"></div>
+  <div class="foot2">Metinler, kamu malı eserlerdeki düşüncelerin kendi Türkçe aktarımı — yayımlanmış çevirilerden alıntı değil. Kaynak, fikrin geldiği eseri gösterir.</div>
+</div>
+
+<div id="v-info" hidden>
+  <div class="daily">Günün bilgisi · <span id="iDate"></span></div>
+  <div class="ticks" id="iTicks"></div>
+  <div class="plate" id="iCard"></div>
+  <div class="nav2">
+    <button class="b2" id="iNext">Başka bir tane</button>
+    <button class="b2" id="iToday">Günün bilgisi</button>
+    <span class="ct" id="iCount"></span>
+  </div>
+  <div class="chips2" id="iFilter"></div>
+  <div class="foot2">Her kartta bir sayı, bir kaynak ve bir sınır var. Sınır kutusu, o sayının nerede geçerli olmadığını söyler.</div>
+</div>
+
+</div>
+<nav class="tabs" role="tablist">
+  <button data-v="sheet" aria-selected="true">Çizelge</button>
+  <button data-v="mind" aria-selected="false">Düşünce</button>
+  <button data-v="info" aria-selected="false">Bilgi</button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+var KEY='cizelge:v1';
+var store={
+  get:function(){
+    if(window.storage&&window.storage.get){
+      return window.storage.get(KEY).then(function(r){return r?r.value:null}).catch(function(){return null});
+    }
+    return Promise.resolve((function(){try{return window.localStorage.getItem(KEY)}catch(e){return null}})());
+  },
+  set:function(v){
+    if(window.storage&&window.storage.set){return window.storage.set(KEY,v).catch(function(){})}
+    try{window.localStorage.setItem(KEY,v)}catch(e){}
+    return Promise.resolve();
+  }
+};
+
+var DEFAULT={
+  habits:[
+    {id:'h1',n:'7+ saat uyku',on:['normal','cikis']},
+    {id:'h3',n:'Kalori 1900–2000',on:['normal','nobet','cikis']},
+    {id:'h4',n:'Açık 500–700 kcal',on:['normal','nobet','cikis']},
+    {id:'h5',n:'Protein 170 g',on:['normal','nobet','cikis']},
+    {id:'h6',n:'Kardiyo 20+ dk',on:['normal','cikis']},
+    {id:'h7',n:'20 dk okuma',on:['normal','cikis']},
+    {id:'h8',n:'Antrenman',on:['normal','cikis'],log:true},
+    {id:'h9',n:'Kreatin',on:['normal','nobet','cikis'],log:true}
+  ],
+  quotas:[
+    {id:'q1',n:'Antrenman',t:4,from:'h8'},
+    {id:'q2',n:'Kariyer adımı · YBÜ / ASM',t:1},
+    {id:'q3',n:'Bütçe kontrolü',t:1},
+    {id:'q4',n:'Slow Days içerik',t:2}
+  ],
+  v:5,
+  log:{},wk:{},reviewed:'',theme:'paper'
+};
+var S=JSON.parse(JSON.stringify(DEFAULT));
+var monthsBack=1;
+
+var AY=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+var GUN=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+var TYPES=['normal','nobet','cikis'];
+function key(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fromKey(k){var p=k.split('-');return new Date(+p[0],+p[1]-1,+p[2])}
+function today(){var d=new Date();d.setHours(0,0,0,0);return d}
+function addDays(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x}
+function isoWeek(d){
+  var t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  var dn=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-dn);
+  var ys=new Date(Date.UTC(t.getUTCFullYear(),0,1));
+  return t.getUTCFullYear()+'-W'+String(Math.ceil((((t-ys)/86400000)+1)/7)).padStart(2,'0');
+}
+var TK=key(today());
+
+function entry(k,create){
+  if(!S.log[k]){
+    if(!create)return null;
+    var prev=S.log[key(addDays(fromKey(k),-1))];
+    S.log[k]={t:(prev&&prev.t==='nobet')?'cikis':'normal',d:{}};
+  }
+  return S.log[k];
+}
+function applicable(k){
+  var e=S.log[k],t=e?e.t:'normal';
+  return S.habits.filter(function(h){return h.on.indexOf(t)>=0});
+}
+function scored(k){return applicable(k).filter(function(h){return !h.log})}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+/* ================= sheet ================= */
+function renderSheet(){
+  var box=document.getElementById('sheetbox');
+  var now=today(),html='';
+  for(var b=0;b<=monthsBack;b++){
+    var d=new Date(now.getFullYear(),now.getMonth()-b,1);
+    if(b>0)html+='<div class="gap"></div>';
+    html+=monthTable(d.getFullYear(),d.getMonth());
+  }
+  box.innerHTML=html;
+  [].forEach.call(box.querySelectorAll('td[data-k]'),function(td){
+    td.onclick=function(){
+      var k=td.dataset.k,hid=td.dataset.h;
+      if(fromKey(k)>today())return;
+      var e=entry(k,true);
+      var hb=S.habits.filter(function(x){return x.id===hid})[0];
+      if(!hb||hb.on.indexOf(e.t)<0)return;
+      if(e.d[hid])delete e.d[hid];else e.d[hid]=1;
+      save();renderAll();
+    };
+  });
+  [].forEach.call(box.querySelectorAll('th[data-k]'),function(th){
+    th.onclick=function(){
+      var k=th.dataset.k;
+      if(fromKey(k)>today())return;
+      var e=entry(k,true);
+      e.t=TYPES[(TYPES.indexOf(e.t)+1)%3];
+      save();renderAll();
+    };
+  });
+  var first=box.querySelector('.sheetbox table')||box;
+  var tdEl=box.querySelector('.td');
+  if(tdEl)box.scrollLeft=Math.max(0,(today().getDate()-1)*21-box.clientWidth+170);
+}
+
+function monthTable(y,m){
+  var dim=new Date(y,m+1,0).getDate();
+  var h='<table class="mo"><colgroup><col style="width:128px">';
+  for(var i=0;i<dim;i++)h+='<col style="width:21px">';
+  h+='</colgroup><thead><tr><th class="lbl">'+AY[m]+' '+y+'</th>';
+  var keys=[];
+  for(var i=1;i<=dim;i++){
+    var k=key(new Date(y,m,i));keys.push(k);
+    var e=S.log[k],cls=[];
+    if(e&&e.t==='nobet')cls.push('nb');
+    if(k===TK)cls.push('td');
+    h+='<th data-k="'+k+'" class="'+cls.join(' ')+'">'+i+'</th>';
+  }
+  h+='</tr></thead><tbody>';
+  S.habits.forEach(function(hb){
+    h+='<tr><td class="lbl" title="'+esc(hb.n)+'">'+esc(hb.n)+'</td>';
+    keys.forEach(function(k){
+      var e=S.log[k],cls=[],inner='';
+      if(k===TK)cls.push('td');
+      if(!e){inner=''}
+      else if(hb.on.indexOf(e.t)<0){cls.push('na')}
+      else{
+        var st=e.d[hb.id]?' on':((!hb.log&&k<TK&&Object.keys(e.d).length)?' x':'');
+        inner='<span class="chk'+st+'"></span>';
+      }
+      h+='<td data-k="'+k+'" data-h="'+hb.id+'" class="'+cls.join(' ')+'">'+inner+'</td>';
+    });
+    h+='</tr>';
+  });
+  h+='<tr class="score"><td class="lbl">Güne puanım</td>';
+  keys.forEach(function(k){
+    var e=S.log[k];
+    if(!e){h+='<td></td>';return}
+    if(!Object.keys(e.d).length&&k!==TK){h+='<td class="nolog">·</td>';return}
+    var ap=S.habits.filter(function(x){return x.on.indexOf(e.t)>=0&&!x.log});
+    if(!ap.length){h+='<td></td>';return}
+    var c=ap.filter(function(x){return e.d[x.id]}).length,r=c/ap.length;
+    var s=r>=1?'s3':r>=.7?'s2':r>=.4?'s1':'s0';
+    h+='<td class="'+s+'">'+c+'</td>';
+  });
+  h+='</tr></tbody></table>';
+  return h;
+}
+
+/* ================= today ================= */
+function renderToday(){
+  var d=today(),e=entry(TK,true);
+  document.getElementById('tDate').firstChild.textContent=d.getDate()+' '+AY[d.getMonth()];
+  document.getElementById('tSub').textContent=GUN[d.getDay()];
+  document.getElementById('topSub').textContent=isoWeek(d).split('-')[1].toLowerCase()+'. hafta';
+  var ap=applicable(TK),sc=scored(TK),done=sc.filter(function(h){return e.d[h.id]}).length;
+  var ts=document.getElementById('tScore');
+  ts.textContent=done+'/'+sc.length;
+  ts.className='tscore'+(sc.length&&done===sc.length?' full':'');
+  document.getElementById('applCount').textContent=sc.length+' satır · '+(ap.length-sc.length)+' kayıt';
+  [].forEach.call(document.querySelectorAll('.types button'),function(b){
+    b.setAttribute('aria-pressed',String(b.dataset.type===e.t));
+  });
+  var c=document.getElementById('chips');c.innerHTML='';
+  ap.forEach(function(h){
+    var run=missRun(h.id);
+    var b=document.createElement('button');
+    b.className='chip';b.setAttribute('aria-pressed',String(!!e.d[h.id]));
+    b.innerHTML='<span class="k"></span><span class="t"></span>'+(run>=2?'<span class="run">'+run+'g</span>':'');
+    b.querySelector('.t').textContent=h.n;
+    b.onclick=function(){if(e.d[h.id])delete e.d[h.id];else e.d[h.id]=1;save();renderAll()};
+    c.appendChild(b);
+  });
+  if(!ap.length)c.innerHTML='<div class="hint">Bu gün tipi için satır yok. Aşağıdan ekle.</div>';
+}
+
+function renderQuotas(){
+  var w=isoWeek(today());
+  document.getElementById('wkLbl').textContent=w.split('-')[1].toLowerCase()+'. hafta';
+  if(!S.wk[w])S.wk[w]={};
+  var box=document.getElementById('quotas');box.innerHTML='';
+  S.quotas.forEach(function(q){
+    var c,derived=!!q.from;
+    if(derived){
+      c=0;
+      for(var i=-7;i<=7;i++){
+        var dd=addDays(today(),i);
+        if(isoWeek(dd)!==w)continue;
+        var ee=S.log[key(dd)];
+        if(ee&&ee.d[q.from])c++;
+      }
+    }else c=S.wk[w][q.id]||0;
+    var el=document.createElement('div');el.className='q';
+    var p='';for(var i=0;i<Math.max(q.t,c);i++)p+='<span class="pip'+(i<c?' on':'')+'"></span>';
+    el.innerHTML='<span class="qn"></span><span class="pips">'+p+'</span>'+
+      (derived?'<span class="pct"><small>çizelgeden</small></span>':'<button class="qb">−</button><button class="qb">+</button>');
+    el.querySelector('.qn').textContent=q.n;
+    if(!derived){
+      var bs=el.querySelectorAll('.qb');
+      bs[0].onclick=function(){S.wk[w][q.id]=Math.max(0,c-1);save();renderQuotas()};
+      bs[1].onclick=function(){S.wk[w][q.id]=Math.min(q.t,c+1);save();renderQuotas()};
+    }
+    box.appendChild(el);
+  });
+}
+
+/* ================= stats ================= */
+function last30(){var o=[],d=today();for(var i=29;i>=0;i--)o.push(key(addDays(d,-i)));return o}
+function missRun(hid){
+  var d=today(),run=0,hb=S.habits.filter(function(x){return x.id===hid})[0];
+  if(!hb||hb.log)return 0;
+  for(var i=0;i<60;i++){
+    var k=key(addDays(d,-i)),e=S.log[k];
+    if(!e)continue;
+    if(hb.on.indexOf(e.t)<0)continue;
+    if(!Object.keys(e.d).length)continue;
+    if(e.d[hid])break;
+    run++;
+  }
+  return run;
+}
+function renderStats(){
+  var ks=last30(),tot=0,dn=0,streak=0,dbl=0,prevLow=false,cov=0;
+  ks.forEach(function(k){
+    var e=S.log[k];if(!e){prevLow=false;return}
+    if(!Object.keys(e.d).length){prevLow=false;return}
+    cov++;
+    var ap=S.habits.filter(function(x){return x.on.indexOf(e.t)>=0&&!x.log});
+    if(!ap.length)return;
+    var c=ap.filter(function(x){return e.d[x.id]}).length;
+    tot+=ap.length;dn+=c;
+    streak=(c===ap.length)?streak+1:0;
+    var low=(c/ap.length)<0.5;
+    if(low&&prevLow)dbl++;
+    prevLow=low;
+  });
+  document.getElementById('st30').textContent=tot?('%'+Math.round(dn/tot*100)):'—';
+  document.getElementById('st30lbl').textContent=cov?('uyum · '+cov+'/30 gün kayıtlı'):'uyum';
+  document.getElementById('stStreak').textContent=streak;
+  var m=document.getElementById('stMiss');m.textContent=dbl;m.className=dbl>0?'bad':'';
+  var al=document.getElementById('alerts');al.innerHTML='';
+  var risky=S.habits.map(function(h){return{h:h,r:missRun(h.id)}}).filter(function(x){return x.r>=2});
+  if(risky.length){
+    var n=document.createElement('div');n.className='note';
+    n.innerHTML='<b>Üst üste kaçırılıyor:</b> '+risky.map(function(x){return esc(x.h.n)+' ('+x.r+')'}).join(', ')+
+      '. Bir günü kaçırmak alışkanlığı bozmuyor, ikisi bozuyor. Bugün bu satırı en küçük haliyle yap.';
+    al.appendChild(n);
+  }
+  var d=today();
+  document.getElementById('reviewBox').hidden=!(d.getDate()<=3&&S.reviewed!==d.getFullYear()+'-'+d.getMonth());
+}
+function renderPerHabit(){
+  var ks=last30(),box=document.getElementById('perHabit');box.innerHTML='';
+  S.habits.forEach(function(h){
+    var ap=0,dn=0;
+    ks.forEach(function(k){
+      var e=S.log[k];if(!e||h.on.indexOf(e.t)<0)return;
+      if(!Object.keys(e.d).length)return;
+      ap++;if(e.d[h.id])dn++;
+    });
+    var pc=ap?Math.round(dn/ap*100):null;
+    var el=document.createElement('div');el.className='q';
+    var right=h.log?(dn+' <small>gün</small>'):(pc===null?'—':'%'+pc+' <small>'+dn+'/'+ap+'</small>');
+    el.innerHTML='<span class="qn"></span><span class="pct'+(!h.log&&pc!==null&&pc<50?' low':'')+'">'+right+'</span>';
+    el.querySelector('.qn').textContent=h.n;
+    box.appendChild(el);
+  });
+}
+
+/* ================= editor ================= */
+function renderEditor(){
+  var he=document.getElementById('hEdit');he.innerHTML='';
+  S.habits.forEach(function(h,ix){
+    var el=document.createElement('div');el.className='er';
+    el.innerHTML='<input type="text" value="'+esc(h.n)+'"><span class="tags">'+
+      '<button class="tag" data-t="normal" aria-pressed="'+(h.on.indexOf('normal')>=0)+'">G</button>'+
+      '<button class="tag" data-t="nobet" aria-pressed="'+(h.on.indexOf('nobet')>=0)+'">N</button>'+
+      '<button class="tag" data-t="cikis" aria-pressed="'+(h.on.indexOf('cikis')>=0)+'">Ç</button>'+
+      '<button class="tag lg" aria-pressed="'+(!!h.log)+'" title="kayıt satırı — puana girmez">K</button>'+
+      '</span><button class="del">×</button>';
+    el.querySelector('input').oninput=function(){h.n=this.value;save();renderSheet();renderToday();renderPerHabit()};
+    el.querySelector('.tag.lg').onclick=function(){
+      h.log=!h.log;this.setAttribute('aria-pressed',String(!!h.log));
+      save();renderSheet();renderToday();renderQuotas();renderStats();renderPerHabit();
+    };
+    [].forEach.call(el.querySelectorAll('.tag[data-t]'),function(b){
+      b.onclick=function(){
+        var t=b.dataset.t,i=h.on.indexOf(t);
+        if(i>=0)h.on.splice(i,1);else h.on.push(t);
+        b.setAttribute('aria-pressed',String(h.on.indexOf(t)>=0));
+        save();renderSheet();renderToday();renderStats();renderPerHabit();
+      };
+    });
+    el.querySelector('.del').onclick=function(){S.habits.splice(ix,1);save();renderAll()};
+    he.appendChild(el);
+  });
+  var qe=document.getElementById('qEdit');qe.innerHTML='';
+  S.quotas.forEach(function(q,ix){
+    var el=document.createElement('div');el.className='er';
+    el.innerHTML='<input type="text" value="'+esc(q.n)+'"><input type="number" min="1" max="7" value="'+q.t+'"><span class="hint" style="margin:0">/hafta</span><button class="del">×</button>';
+    var ins=el.querySelectorAll('input');
+    ins[0].oninput=function(){q.n=this.value;save();renderQuotas()};
+    ins[1].oninput=function(){q.t=Math.max(1,Math.min(7,+this.value||1));save();renderQuotas()};
+    el.querySelector('.del').onclick=function(){S.quotas.splice(ix,1);save();renderAll()};
+    qe.appendChild(el);
+  });
+}
+
+function renderAll(){renderSheet();renderToday();renderQuotas();renderStats();renderPerHabit();renderEditor()}
+
+/* ================= events ================= */
+[].forEach.call(document.querySelectorAll('.types button'),function(b){
+  b.onclick=function(){entry(TK,true).t=b.dataset.type;save();renderAll()};
+});
+document.getElementById('moreBtn').onclick=function(){monthsBack++;renderSheet()};
+document.getElementById('themeBtn').onclick=function(){
+  S.theme=S.theme==='night'?'paper':'night';
+  document.documentElement.dataset.theme=S.theme;
+  this.textContent=S.theme==='night'?'Kağıt':'Gece';
+  save();
+};
+document.getElementById('toggleEdit').onclick=function(){
+  var ed=document.getElementById('editor');ed.hidden=!ed.hidden;this.textContent=ed.hidden?'Aç':'Kapat';
+};
+document.getElementById('addHabit').onclick=function(){
+  S.habits.push({id:'h'+Date.now(),n:'Yeni satır',on:['normal']});save();renderAll();
+  document.getElementById('editor').hidden=false;document.getElementById('toggleEdit').textContent='Kapat';
+};
+document.getElementById('addQuota').onclick=function(){S.quotas.push({id:'q'+Date.now(),n:'Yeni kota',t:3});save();renderAll()};
+document.getElementById('dismissReview').onclick=function(){var d=today();S.reviewed=d.getFullYear()+'-'+d.getMonth();save();renderStats()};
+document.getElementById('expBtn').onclick=function(){
+  var s=JSON.stringify(S);
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(s).then(function(){toast('Panoya kopyalandı')},function(){prompt('Kopyala:',s)});
+  else prompt('Kopyala:',s);
+};
+document.getElementById('impBtn').onclick=function(){
+  var s=prompt('Yedeği yapıştır:');if(!s)return;
+  try{S=Object.assign({},DEFAULT,JSON.parse(s));applyTheme();save();renderAll();toast('İçe aktarıldı')}catch(e){toast('Geçersiz veri')}
+};
+document.getElementById('resetBtn').onclick=function(){
+  if(!confirm('Tüm kayıtlar silinsin mi? Geri alınamaz.'))return;
+  S=JSON.parse(JSON.stringify(DEFAULT));applyTheme();save();renderAll();toast('Sıfırlandı');
+};
+var tt;function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show')},1600)}
+function applyTheme(){
+  document.documentElement.dataset.theme=S.theme||'paper';
+  document.getElementById('themeBtn').textContent=(S.theme==='night')?'Kağıt':'Gece';
+}
+
+/* ================= sekmeler ================= */
+var MIND=[{"c": "Stoa", "t": "Seni sarsan şey olayın kendisi değil, ona verdiğin hüküm. Ve o hükmü şu an geri çekebilirsin.", "s": "Marcus Aurelius, Kendime Düşünceler"}, {"c": "Stoa", "t": "Sabah kalkmak ağır geldiğinde: insan işini görmek için doğdu, yorganın altında ısınmak için değil.", "s": "Marcus Aurelius, Kendime Düşünceler"}, {"c": "Stoa", "t": "Ne kadar zamanın kaldığını değil, kalanı neye harcadığını düşün.", "s": "Marcus Aurelius, Kendime Düşünceler"}, {"c": "Stoa", "t": "Yarını dert etme. Yarını karşılayacak olan, bugün elinde tuttuğun aynı akıl.", "s": "Marcus Aurelius, Kendime Düşünceler"}, {"c": "Stoa", "t": "En temiz intikam, aynı şeyi yapan adam olmamaktır.", "s": "Marcus Aurelius, Kendime Düşünceler"}, {"c": "Stoa", "t": "Kendi zihnine çekil. Hiçbir sığınak insanın kendi içinden daha sessiz değildir.", "s": "Marcus Aurelius, Kendime Düşünceler"}, {"c": "Stoa", "t": "Her işi son işin olabilirmiş gibi yap. Bu, hem aceleyi hem savsaklamayı aynı anda bitirir.", "s": "Marcus Aurelius, Kendime Düşünceler"}, {"c": "Stoa", "t": "Dışarıdan gelene öfkelenmenin anlamı yok; onun senden haberi bile yok.", "s": "Marcus Aurelius, Kendime Düşünceler"}, {"c": "Stoa", "t": "Bazı şeyler elimizde, bazıları değil. Bütün mesele bu sınırı doğru çizmekte.", "s": "Epiktetos, Elkitabı"}, {"c": "Stoa", "t": "İnsanı olaylar değil, olaylar hakkındaki fikirleri rahatsız eder.", "s": "Epiktetos, Elkitabı"}, {"c": "Stoa", "t": "Hastalık bedenin engelidir, iradenin değil — sen izin vermedikçe.", "s": "Epiktetos, Elkitabı"}, {"c": "Stoa", "t": "Öğrenmek isteyen adam, öğrenmiş görünmek isteyen adam olamaz.", "s": "Epiktetos, Söyleşiler"}, {"c": "Stoa", "t": "Kısa bir ömrümüz yok; büyük kısmını israf ediyoruz.", "s": "Seneca, Hayatın Kısalığı Üzerine"}, {"c": "Stoa", "t": "Her yerde olan, hiçbir yerde değildir.", "s": "Seneca, Mektuplar"}, {"c": "Stoa", "t": "Çektiğimiz acıların çoğu gerçekte değil, hayalde yaşanır.", "s": "Seneca, Mektuplar"}, {"c": "Stoa", "t": "Nereye gittiğini bilmeyen gemiye hiçbir rüzgâr yardım etmez.", "s": "Seneca, Mektuplar"}, {"c": "Stoa", "t": "Mesele ne kadar yaşadığın değil, ne kadar iyi yaşadığın.", "s": "Seneca, Mektuplar"}, {"c": "Güç", "t": "Sevilmekle korkulmak arasında seçmek zorunda kalırsan korkulmayı seç: sevgi başkasının iradesine, korku senin iradene bağlıdır.", "s": "Machiavelli, Prens"}, {"c": "Güç", "t": "Zarar vereceksen hepsini bir kerede ver; iyilik yapacaksan azar azar yay.", "s": "Machiavelli, Prens"}, {"c": "Güç", "t": "Herkes ne göründüğünü görür; ne olduğunu çok az kişi anlar.", "s": "Machiavelli, Prens"}, {"c": "Güç", "t": "Hastalık başta teşhis edilmesi zor, tedavisi kolaydır. Sonra teşhis kolaylaşır, tedavi imkânsızlaşır. Devlet işleri de böyle.", "s": "Machiavelli, Prens"}, {"c": "Güç", "t": "Kendi silahına dayanmayan gücün itibarı yoktur.", "s": "Machiavelli, Prens"}, {"c": "Güç", "t": "Yeni bir düzen kurmaktan daha zor, daha tehlikeli ve başarısı daha şüpheli bir iş yoktur.", "s": "Machiavelli, Prens"}, {"c": "Güç", "t": "İnsanlar babasının ölümünü, mirasının kaybından daha çabuk unutur.", "s": "Machiavelli, Prens"}, {"c": "Güç", "t": "Kaderin yarısı bizim elimizde; ama o yarıyı almak için hazırlıklı olmak gerekir.", "s": "Machiavelli, Prens"}, {"c": "Savaş", "t": "Savaş bir aldatma sanatıdır.", "s": "Sun Tzu, Savaş Sanatı"}, {"c": "Savaş", "t": "En üstün ustalık, savaşmadan kazanmaktır.", "s": "Sun Tzu, Savaş Sanatı"}, {"c": "Savaş", "t": "Kendini ve karşındakini bilirsen yüz muharebeden korkmazsın.", "s": "Sun Tzu, Savaş Sanatı"}, {"c": "Savaş", "t": "Kazanan ordu önce kazanır sonra savaşır; kaybeden ordu önce savaşır sonra kazanmayı arar.", "s": "Sun Tzu, Savaş Sanatı"}, {"c": "Savaş", "t": "Kaba ama hızlı bir zafer, kusursuz ama uzun bir seferden iyidir.", "s": "Sun Tzu, Savaş Sanatı"}, {"c": "Savaş", "t": "Hazırlıksız olduğu yere saldır, beklemediği yerden çık.", "s": "Sun Tzu, Savaş Sanatı"}, {"c": "Savaş", "t": "Bir orduyu tanımak için sayısına değil disiplinine bak.", "s": "Sun Tzu, Savaş Sanatı"}, {"c": "Savaş", "t": "Savaşta her şey basittir; ama en basit şey zordur. Buna sürtünme denir.", "s": "Clausewitz, Savaş Üzerine"}, {"c": "Savaş", "t": "Savaş, siyasetin başka araçlarla sürdürülmesidir.", "s": "Clausewitz, Savaş Üzerine"}, {"c": "Savaş", "t": "Bir şeyi bin gün çalışmak eğitimdir; on bin gün çalışmak ustalık.", "s": "Musashi, Beş Çember"}, {"c": "Savaş", "t": "Kılıcı tutuşun gündelik duruşun, gündelik duruşun kılıcı tutuşun olsun.", "s": "Musashi, Beş Çember"}, {"c": "Savaş", "t": "Faydasız hiçbir şey yapma.", "s": "Musashi, Dokuz Kural"}, {"c": "Savaş", "t": "Hiçbir şeyden pişman olma.", "s": "Musashi, Dokuz Kural"}, {"c": "Nietzsche", "t": "Bir 'neden'i olan, hemen her 'nasıl'a katlanır.", "s": "Nietzsche, Putların Alacakaranlığı"}, {"c": "Nietzsche", "t": "Uçuruma uzun süre bakarsan uçurum da sana bakar.", "s": "Nietzsche, İyinin ve Kötünün Ötesinde"}, {"c": "Nietzsche", "t": "İnsan, aşılması gereken bir şeydir.", "s": "Nietzsche, Böyle Buyurdu Zerdüşt"}, {"c": "Nietzsche", "t": "Kendine emretmeyi bilmeyen, itaat etmeyi öğrenir.", "s": "Nietzsche, Böyle Buyurdu Zerdüşt"}, {"c": "Nietzsche", "t": "Bir şeye evet demek, yüz şeye hayır demektir.", "s": "Nietzsche, Böyle Buyurdu Zerdüşt"}, {"c": "Nietzsche", "t": "En sessiz sözler fırtınayı getirir.", "s": "Nietzsche, Böyle Buyurdu Zerdüşt"}, {"c": "Nietzsche", "t": "Hafızam 'bunu yaptım' diyor. Gururum 'yapmış olamam' diyor. Sonunda teslim olan hafıza oluyor.", "s": "Nietzsche, İyinin ve Kötünün Ötesinde"}, {"c": "Nietzsche", "t": "Ahlaki olgu diye bir şey yoktur; yalnızca olguların ahlaki yorumu vardır.", "s": "Nietzsche, İyinin ve Kötünün Ötesinde"}, {"c": "Nietzsche", "t": "İçinde kaosunu koru; dans eden bir yıldız ancak oradan doğar.", "s": "Nietzsche, Böyle Buyurdu Zerdüşt"}, {"c": "Nietzsche", "t": "Güçsüzün intikamı, kendi güçsüzlüğüne erdem adını vermektir.", "s": "Nietzsche, Ahlakın Soykütüğü"}, {"c": "Nietzsche", "t": "Amaçsızlıktan değil, amaca ulaşamamaktan değil — anlamsızlıktan hastalanır insan.", "s": "Nietzsche, Ahlakın Soykütüğü"}, {"c": "Nietzsche", "t": "İnsan mutluluğun peşinden koşmaz; yalnızca İngiliz koşar.", "s": "Nietzsche, Putların Alacakaranlığı"}, {"c": "İnsan", "t": "Her insan kendi görüş alanının sınırlarını dünyanın sınırları sanır.", "s": "Schopenhauer, Denemeler"}, {"c": "İnsan", "t": "Yalnızlık, üstün zekâların payına düşen kaderdir.", "s": "Schopenhauer, Yaşam Bilgeliği"}, {"c": "İnsan", "t": "Sağlık her şey değildir; ama sağlık olmadan her şey hiçtir.", "s": "Schopenhauer, Yaşam Bilgeliği"}, {"c": "İnsan", "t": "Servet deniz suyudur: içtikçe susarsın.", "s": "Schopenhauer, Yaşam Bilgeliği"}, {"c": "İnsan", "t": "Erdemlerimiz çoğu zaman kılık değiştirmiş kusurlarımızdır.", "s": "La Rochefoucauld, Özdeyişler"}, {"c": "İnsan", "t": "Herkes hafızasından şikâyet eder; kimse muhakemesinden etmez.", "s": "La Rochefoucauld, Özdeyişler"}, {"c": "İnsan", "t": "Nasihat vermeye bu kadar hevesli oluşumuzun sebebi, onu kendimize verecek kadar hevesli olmayışımız.", "s": "La Rochefoucauld, Özdeyişler"}, {"c": "İnsan", "t": "Dostlarımızın felaketinde bize hiç de nahoş gelmeyen bir taraf vardır.", "s": "La Rochefoucauld, Özdeyişler"}, {"c": "İnsan", "t": "İşi bitirmek başlatmaktan zordur; başlamayı her budala becerir.", "s": "Gracián, El Kitabı"}, {"c": "İnsan", "t": "İhtiyacın olduğunda değil, olmadan önce dost edin.", "s": "Gracián, El Kitabı"}, {"c": "İnsan", "t": "Kendini asla tamamen gösterme; merak saygıyı besler.", "s": "Gracián, El Kitabı"}, {"c": "İnsan", "t": "Hayatımda korkunç şeyler oldu; bazıları gerçekten yaşandı.", "s": "Montaigne, Denemeler"}, {"c": "İnsan", "t": "En büyük iş, kendi kendinin sahibi olmayı bilmektir.", "s": "Montaigne, Denemeler"}, {"c": "İnsan", "t": "İnsanların bütün mutsuzluğu tek bir şeyden gelir: bir odada sessizce oturamamaktan.", "s": "Pascal, Düşünceler"}, {"c": "İnsan", "t": "Kalbin, aklın bilmediği sebepleri vardır.", "s": "Pascal, Düşünceler"}, {"c": "İnsan", "t": "Hayat ileriye doğru yaşanır, geriye doğru anlaşılır.", "s": "Kierkegaard, Günlükler"}, {"c": "İnsan", "t": "Kaygı, özgürlüğün baş dönmesidir.", "s": "Kierkegaard, Kaygı Kavramı"}, {"c": "İnsan", "t": "İnsanların çoğu sessiz bir çaresizlik içinde yaşar.", "s": "Thoreau, Walden"}, {"c": "İnsan", "t": "Meşgul olman yetmez; karıncalar da meşgul. Soru şu: neyle meşgulsün?", "s": "Thoreau, Mektuplar"}, {"c": "İnsan", "t": "Yaptığın şey öyle gürültü ediyor ki ne söylediğini duyamıyorum.", "s": "Emerson, Denemeler"}, {"c": "İnsan", "t": "Kitap bir aynadır: içine maymun bakıyorsa dışarı havari çıkmaz.", "s": "Lichtenberg, Defterler"}, {"c": "İnsan", "t": "Büyük düşünceler kalpten gelir.", "s": "Vauvenargues, Düşünceler"}, {"c": "İnsan", "t": "En kayıp gün, hiç gülünmeyen gündür.", "s": "Chamfort, Özdeyişler"}, {"c": "Doğu", "t": "Bin fersahlık yol tek adımla başlar.", "s": "Lao Tzu, Tao Te Ching"}, {"c": "Doğu", "t": "Başkasını bilen bilgedir; kendini bilen aydınlanmıştır.", "s": "Lao Tzu, Tao Te Ching"}, {"c": "Doğu", "t": "Su en yumuşak şeydir, ama en sert olanı aşındırır.", "s": "Lao Tzu, Tao Te Ching"}, {"c": "Doğu", "t": "Boş bir kayık sana çarparsa öfkelenmezsin. İnsanların çoğu boş kayıktır.", "s": "Zhuangzi"}, {"c": "Doğu", "t": "Ustanın bıçağı on dokuz yıldır bilenmemiş: kemiğe değil, boşluğa giriyor.", "s": "Zhuangzi, Aşçı Ding"}, {"c": "Klasik", "t": "Aynı nehre iki kez girilmez.", "s": "Herakleitos, Fragmanlar"}, {"c": "Klasik", "t": "Karakter, insanın kaderidir.", "s": "Herakleitos, Fragmanlar"}, {"c": "Klasik", "t": "Erdem bir alışkanlıktır. Mükemmellik bir eylem değil, bir alışkanlıktır.", "s": "Aristoteles, Nikomakhos'a Etik"}, {"c": "Klasik", "t": "İnsan doğası gereği bilmek ister.", "s": "Aristoteles, Metafizik"}, {"c": "Klasik", "t": "Akıl, tutkuların kölesidir ve olmalıdır.", "s": "Hume, İnsan Doğası Üzerine"}, {"c": "Klasik", "t": "Ne gülmek, ne ağlamak, ne lanetlemek — yalnızca anlamak.", "s": "Spinoza, Politik İnceleme"}, {"c": "Klasik", "t": "Özgür insan hiçbir şeyi ölüm kadar az düşünür; bilgeliği ölüm üzerine değil yaşam üzerine bir düşünmedir.", "s": "Spinoza, Etika"}, {"c": "Klasik", "t": "İnsanın hayatı yalnız, yoksul, kötü, vahşi ve kısadır — düzen olmadığında.", "s": "Hobbes, Leviathan"}, {"c": "Klasik", "t": "Bilgi güçtür.", "s": "Bacon, Novum Organum"}, {"c": "Klasik", "t": "Gölge etme, başka ihsan istemem.", "s": "Diogenes'in İskender'e cevabı"}, {"c": "Zaman", "t": "Zamanı kaybetmiyoruz; ondan çalınıyoruz. Ve hırsızın adını biliyoruz.", "s": "Seneca, Hayatın Kısalığı Üzerine"}, {"c": "Zaman", "t": "Herkes malını kıskançlıkla korur; sıra zamana gelince en savurgan davranan yine aynı adamdır.", "s": "Seneca, Hayatın Kısalığı Üzerine"}, {"c": "Zaman", "t": "Yaşamayı erteleyen adam, nehrin akıp geçmesini bekleyen köylüdür.", "s": "Horatius, Mektuplar"}, {"c": "Zaman", "t": "Bugünü kendi hesabına yaz; yarına en az güvenen adam ol.", "s": "Horatius, Odlar"}, {"c": "Zaman", "t": "İnsan geleceğe o kadar hazırlanır ki, hiç yaşamadan hazırlanmış olarak ölür.", "s": "Pascal, Düşünceler"}, {"c": "Zaman", "t": "Acele eden herkes geç kalır.", "s": "Latin özdeyişi"}, {"c": "Zaman", "t": "Yavaş yürü, çabuk varırsın.", "s": "Japon atasözü / Musashi geleneği"}, {"c": "Para", "t": "Yoksulluk az şeye sahip olmak değildir; çok şey istemektir.", "s": "Seneca, Mektuplar"}, {"c": "Para", "t": "Doğaya göre yaşayan asla yoksul olmaz; kanaate göre yaşayan asla zengin olmaz.", "s": "Epikuros, Fragmanlar"}, {"c": "Para", "t": "Zenginlik, sahip olduklarında değil, istemediklerinde ölçülür.", "s": "Epiktetos geleneği"}, {"c": "Para", "t": "Borç, özgürlüğün en sessiz satışıdır.", "s": "Publilius Syrus, Özdeyişler"}, {"c": "Para", "t": "Bir şeyin bedeli, karşılığında verdiğin hayat miktarıdır.", "s": "Thoreau, Walden"}, {"c": "Para", "t": "İnsanlar servetlerini korumak için sağlıklarını, sonra sağlıklarını geri almak için servetlerini harcar.", "s": "Klasik ahlak geleneği"}, {"c": "Stoa", "t": "Kaderin sana ne verdiğine değil, onu nasıl taşıdığına bakılacak.", "s": "Seneca, Mektuplar"}, {"c": "Stoa", "t": "Fırtınayı değil, yelkeni ayarlarsın.", "s": "Stoacı gelenek"}, {"c": "Stoa", "t": "Zorluk arama; ama geldiğinde 'işte bunun için çalışıyordum' de.", "s": "Epiktetos, Söyleşiler"}, {"c": "Güç", "t": "İnsanlar korktukları kadar sadıktır; sevdikleri kadar değil. Sevgi kırılır, korku hesaplanır.", "s": "Machiavelli, Prens"}, {"c": "Güç", "t": "Silahsız peygamberler yenildi, silahlı olanlar kazandı.", "s": "Machiavelli, Prens"}, {"c": "Güç", "t": "Kimseyi yarım yamalak yaralama. Yaralı düşman, ölü düşmandan tehlikelidir.", "s": "Machiavelli geleneği"}, {"c": "Savaş", "t": "Zafer, hazırlığın fırsata rastladığı andır. Hazırlık olmadan fırsat yalnızca bir seyirdir.", "s": "Seneca / askerî gelenek"}, {"c": "Savaş", "t": "Bir mevziyi savunamıyorsan orayı terk et; kaybedilmiş bir noktada ısrar, ordunu değil gururunu korur.", "s": "Sun Tzu, Savaş Sanatı"}, {"c": "Savaş", "t": "Uzun süren savaştan hiçbir ülke kâr etmemiştir.", "s": "Sun Tzu, Savaş Sanatı"}, {"c": "Nietzsche", "t": "Kendi alevinde yanmaya hazır olmalısın; önce kül olmadan nasıl yenilenirsin?", "s": "Nietzsche, Böyle Buyurdu Zerdüşt"}, {"c": "Nietzsche", "t": "Yalnızlıktan kaçan kendinden kaçar.", "s": "Nietzsche, İnsanca Pek İnsanca"}, {"c": "Nietzsche", "t": "Her derin düşünür anlaşılmaktan çok yanlış anlaşılmaktan korkar.", "s": "Nietzsche, İyinin ve Kötünün Ötesinde"}, {"c": "İnsan", "t": "İnsanlar seni değil, senin hakkındaki fikirlerini savunur.", "s": "La Rochefoucauld geleneği"}, {"c": "İnsan", "t": "Küçük acılar konuşur, büyük acılar susar.", "s": "Seneca, Phaedra"}, {"c": "Doğu", "t": "Dolu bir fincana çay konmaz.", "s": "Zen geleneği"}, {"c": "Doğu", "t": "Ustanın yolu: acele etmeden, durmadan.", "s": "Tao geleneği"}, {"c": "Klasik", "t": "Bilgeliğin başlangıcı, terimleri doğru adlandırmaktır.", "s": "Konfüçyüs, Konuşmalar"}, {"c": "Soru", "t": "Theseus'un gemisinin bütün tahtaları tek tek değiştirilirse, o hâlâ aynı gemi midir? Sökülen tahtalardan ikinci bir gemi kurulursa hangisi asıl?", "s": "Plutarkhos"}, {"c": "Soru", "t": "Tanrı bir şeyi iyi olduğu için mi buyurur, yoksa buyurduğu için mi iyidir?", "s": "Platon, Euthyphron"}, {"c": "Soru", "t": "Görünmez olmanı sağlayan bir yüzüğün olsa ve asla yakalanmayacağını bilsen, adil kalır mıydın? Ahlakın yalnızca yakalanma korkusu mu?", "s": "Platon, Devlet"}, {"c": "Soru", "t": "Bir cin sana şunu söylese: bu hayatı, her acısı ve her sıkıntısıyla, sonsuz kez aynen yaşayacaksın. Buna lanet mi okurdun, yoksa 'bir kez daha' mı derdin?", "s": "Nietzsche, Şen Bilim"}, {"c": "Soru", "t": "Seni istediğin her deneyimi yaşatacak bir makineye bağlasalar — ama hepsi kurgu olsa — makineye girer miydin? Girmezsen, deneyimden başka neyi önemsiyorsun?", "s": "Nozick, Deneyim Makinesi"}, {"c": "Soru", "t": "Toplumun kurallarını, hangi konuma doğacağını bilmeden yazacak olsan hangi kuralları yazardın?", "s": "Rawls, Cehalet Peçesi"}, {"c": "Soru", "t": "Bedenin Mars'ta atom atom yeniden kurulup buradaki yok edilse, oraya varan sen misin yoksa kopyan mı? Fark ne?", "s": "Parfit, Işınlanma"}, {"c": "Soru", "t": "Beş kişiyi kurtarmak için makası çevirip bir kişiyi öldürmek — eylemsizlikle eylem arasındaki fark ahlaken gerçek mi, yoksa psikolojik mi?", "s": "Foot / Thomson, Tramvay"}, {"c": "Soru", "t": "'Olan'dan 'olması gereken'e nasıl geçiyoruz? Doğanın hiçbir tarifi tek başına bir emir üretmez.", "s": "Hume, İnsan Doğası Üzerine"}, {"c": "Soru", "t": "Bir kum yığınından tek tek tane alırsan hangi tanede yığın olmaktan çıkar? Sınırı olmayan kavramlarla nasıl doğru düşünürüz?", "s": "Sorites Paradoksu"}, {"c": "Soru", "t": "Doğuştan kör biri görmeye başlasa, dokunarak tanıdığı küpü sadece bakarak ayırt edebilir mi?", "s": "Molyneux Problemi"}, {"c": "Soru", "t": "Sisifos taşı sonsuza dek yukarı taşıyor. Camus onu mutlu saymak gerektiğini söylüyor. Anlamsız bir işi anlamlı kılan nedir — iş mi, taşıyan mı?", "s": "Camus, Sisifos Söyleni"}, {"c": "Soru", "t": "'Başka türlü yapamazdım' dediğinde gerçekten yapamaz mıydın, yoksa sorumluluktan mı kaçıyorsun?", "s": "Sartre, Kötü Niyet"}, {"c": "Soru", "t": "Kelebek olduğunu gören bir adam mısın, yoksa adam olduğunu gören bir kelebek mi?", "s": "Zhuangzi"}, {"c": "Soru", "t": "Yalnızca senin anlayabileceğin özel bir dil mümkün müdür? Değilse, en mahrem düşüncen bile ne kadar sana ait?", "s": "Wittgenstein, Felsefi Soruşturmalar"}, {"c": "Soru", "t": "Renkler hakkındaki her fiziksel bilgiye sahip ama siyah-beyaz bir odada büyümüş bilim insanı, ilk kez kırmızıyı gördüğünde yeni bir şey öğrenir mi?", "s": "Jackson, Mary'nin Odası"}, {"c": "Soru", "t": "Çince bilmeyen biri, kurallara bakarak kusursuz Çince cevaplar üretiyorsa Çince anlıyor mudur? Anlamak, doğru çıktı üretmekten fazlası mı?", "s": "Searle, Çin Odası"}, {"c": "Soru", "t": "Yarasa olmak nasıl bir şeydir? Bir canlının iç deneyimini dışarıdan tam olarak bilebilir miyiz?", "s": "Nagel"}, {"c": "Soru", "t": "İki kutu var; birinin içeriği senin ne seçeceğini önceden bilen biri tarafından belirlendi. Bir kutuyu mu alırsın, ikisini de mi?", "s": "Newcomb Problemi"}, {"c": "Soru", "t": "İki eşit yem arasında kalan eşek açlıktan ölür mü? Tam eşit iki seçenek arasında karar nasıl doğar?", "s": "Buridan'ın Eşeği"}, {"c": "Soru", "t": "Neyin doğru olduğunu bilemiyorsan, hangi tarafa bahse girmek daha az maliyetli? Bilgi yokken karar nasıl verilir?", "s": "Pascal'ın Bahsi"}, {"c": "Soru", "t": "'Bu cümle yanlıştır.' Doğruysa yanlış, yanlışsa doğru. Dilin kendisi hakkında konuşurken nerede duracağız?", "s": "Yalancı Paradoksu"}, {"c": "Soru", "t": "Ölüm neden kötü olsun? Sen varken o yok, o varken sen yoksun. Yine de neden korkuyoruz?", "s": "Epikuros, Menoikeus'a Mektup"}, {"c": "Soru", "t": "Daha iyisini bildiğin hâlde neden daha kötüsünü yapıyorsun? İrade zayıflığı gerçekten mümkün mü, yoksa aslında bilmiyor musun?", "s": "Aristoteles, Akrasia"}, {"c": "Soru", "t": "Kapına saklanan masumu arayan katile doğruyu söylemeli misin? Kural mı sonuç mu?", "s": "Kant / Constant tartışması"}, {"c": "Soru", "t": "Sigara içmeyi isteyip, bunu istememeyi isteyen adam özgür müdür? Arzularının arzusu kimin?", "s": "Frankfurt, İkinci Derece Arzular"}, {"c": "Soru", "t": "Sonsuza dek yaşasaydın hayat sıkıcı hâle gelir miydi? Anlamın ölüme ihtiyacı var mı?", "s": "Williams, Makropulos Meselesi"}, {"c": "Soru", "t": "Doğru bir inanca şans eseri sahip olmak bilgi sayılır mı? Bilmek, haklı olmaktan fazlası mı?", "s": "Gettier Problemi"}, {"c": "Soru", "t": "Ok her an bulunduğu yerde duruyorsa hiç hareket etmiyor demektir. Hareket nasıl mümkün?", "s": "Zenon Paradoksları"}, {"c": "Soru", "t": "Bir şeyi neden istediğini biliyor musun, yoksa istediğin şeyi başkaları mı seçti? Arzunun kaynağı nerede?", "s": "Girard, Mimetik Arzu"}, {"c": "Soru", "t": "Yaptığın işi kimse görmeyecek olsa yine aynı özenle yapar mıydın? Değilse, kim için çalışıyorsun?", "s": "Klasik erdem sorusu"}, {"c": "Soru", "t": "Ne kadarına 'yeter' diyeceğini önceden belirlemediysen, hiçbir miktar yetecek mi?", "s": "Epikuros / Stoa"}, {"c": "Soru", "t": "On yıl sonra bugünkü kararına bakan adam kim olacak? Ona karşı sorumluluğun ne?", "s": "Parfit, Kişisel Özdeşlik"}, {"c": "Soru", "t": "Bir şeyi bırakmanın maliyeti, onu sürdürmenin maliyetinden ne zaman düşük olur? Ve bunu hesaplayabiliyor musun, yoksa sadece alıştın mı?", "s": "Batık maliyet"}, {"c": "Soru", "t": "Zorunlu olmayan hiçbir şeye sahip olmasan, neyin eksilirdi?", "s": "Diogenes / Kinik gelenek"}, {"c": "Soru", "t": "Bir alışkanlığı sen mi sürdürüyorsun, o mu seni? Bırakmayı denediğinde cevabı öğrenirsin.", "s": "Aristoteles / Stoa geleneği"}, {"c": "Soru", "t": "Ölüm döşeğindeki adam bugünkü kararına baksa ne derdi? Ve o adam neden şimdi konuşmuyor?", "s": "Memento mori geleneği"}, {"c": "Soru", "t": "Bir işi yaparken değil, bitirdikten sonra mutlu olacağını düşünüyorsan, o iş neden hayatının çoğunu kaplıyor?", "s": "Aristoteles, Nikomakhos'a Etik"}, {"c": "Soru", "t": "Herkesin senin gibi davrandığı bir dünya yaşanabilir mi? Değilse, ayrıcalığını neye dayandırıyorsun?", "s": "Kant, Kategorik İmperatif"}, {"c": "Soru", "t": "Sahip olduğun şeylerin kaçını gerçekten seçtin, kaçını sadece devraldın?", "s": "Sokratik sorgulama"}];
+var INFO=[{"c": "Yağ kaybı", "k": "7700", "ku": "kcal ≈ 1 kg yağ", "h": "7700 kcal = 1 kg kuralı nereden geliyor", "t": "1 lb yağ dokusunun enerji içeriği ~3500 kcal olarak hesaplandı (Wishnofsky, 1958); 2,2 ile çarpılınca kilogram başına ~7700 kcal çıkıyor. Kural bu kadar basit bir çarpımdan ibaret.", "n": "Ama: dokunun enerji yoğunluğu sabit değil. Kaybın ne kadarının yağ, ne kadarının yağsız doku ve su olduğuna göre değişir."}, {"c": "Yağ kaybı", "k": "10", "ku": "kg — kuralın ilk yıl hatası", "h": "Ve neden uzun vadede yanlış", "t": "Hall'un dinamik modelinde 100 kg hareketsiz bir erkek günde 500 kcal azaltırsa ağırlığı ~75 kg'da platoya oturuyor; bu kaybın yaklaşık yarısı ilk yılda, %95'i üç yılda gerçekleşiyor. 3500 kcal kuralı aynı kişi için ilk yılda 22 kg öngörüyor.", "n": "Hata ilk yılda 10 kg'a ulaşabiliyor. Sebep: harcama, kilo düştükçe düşüyor. Doğrusal model bunu yok sayıyor."}, {"c": "Yağ kaybı", "k": "26", "ku": "gün — 84'ten 82'ye", "h": "Senin ölçeğinde kural hâlâ çalışıyor", "t": "Sapma aylar içinde birikiyor. 84→82 kg için 2 kg × 7700 = 15.400 kcal; günde 600 kcal açıkla ~26 gün. 4-6 haftalık bir pencerede doğrusal tahmin hâlâ makul.", "n": "Ama: 6 aydan uzun bir kesim planlıyorsan aynı aritmetiği kullanma. O noktada harcaman artık başladığın gündeki harcaman değil."}, {"c": "Yağ kaybı", "k": "60-80", "ku": "% kaybın yağ payı", "h": "Kaybın ne kadarı gerçekten yağ", "t": "Kilo kaybı sırasında yağsız kütlenin payı %20–40, yağın payı %60–80 aralığında değişiyor. Yani 2 kg tartı kaybının 0,4–0,8 kg'ı yağ olmayabilir.", "n": "Bu oranı senin lehine çeviren üç şey var: yeterli protein, direnç antrenmanı, yeterli uyku. Üçü de çizelgende."}, {"c": "Uyku", "k": "55", "ku": "% yağ oranı düşüşü", "h": "Aynı açık, iki katı kas kaybı", "t": "Nedeltcheva 2010: 10 kişi, aynı kalori kısıtlaması altında 14 gün, iki koşul — 8,5 saat ve 5,5 saat uyku fırsatı. Uyku kısıtlaması kaybın yağ olan oranını %55 düşürdü (1,4 kg → 0,6 kg) ve yağsız kütle kaybını %60 artırdı (1,5 kg → 2,4 kg).", "n": "Aynı diyet, aynı açık. Tek fark uyku. Nöbet tutan biri için çizelgedeki en pahalı satır bu — ve senin nöbet günlerinde uyku satırın yok."}, {"c": "Uyku", "k": "↑", "ku": "açlık · ↓ yağ oksidasyonu", "h": "Uykusuzluk açlığı da büyütüyor", "t": "Aynı çalışmada uyku kısıtlaması açlık hissini artırdı ve substrat kullanımını yağ oksidasyonundan uzaklaştırdı; kalori kısıtlamasına verilen nöroendokrin uyum güçlendi.", "n": "Ama: çalışma 10 kişilik ve 14 günlük. Etki büyüklüğü kesin değil, yönü ise birden fazla çalışmada tutarlı."}, {"c": "Uyku", "k": "1-2", "ku": "kg — nöbet sonrası sapma", "h": "Vardiya sonrası tartı yalan söyler", "t": "24 saat sonrası ödem, tuz yükü ve dehidrasyon tartıyı her iki yöne 1-2 kg oynatabilir. Bu su, yağ değil.", "n": "Kural: nöbet çıkışı tartılma. Tartıyı sabit bir gün tipinde, sabah, tuvalet sonrası, aç karnına al."}, {"c": "Ölçüm", "k": "7", "ku": "günlük ortalama al", "h": "Tek tartı ölçüm değildir", "t": "Günlük ağırlık, glikojen, tuz, bağırsak içeriği ve hidrasyonla ±1-2 kg salınır. 1 g glikojen yaklaşık 3 g su bağlar; kesimin ilk haftasındaki hızlı düşüş büyük ölçüde budur.", "n": "Karar için 7 günlük ortalamayı iki hafta arayla karşılaştır. Tek günlük veriye bakıp kalori değiştirmek gürültüye tepki vermektir."}, {"c": "Kreatin", "k": "3-5", "ku": "g/gün · 28 günde doygunluk", "h": "Doygunluk, günlük doz değil", "t": "Kas içi kreatin havuzu günde 3-5 g ile yaklaşık 28 günde doyuma ulaşır. 5-7 gün boyunca günde ~20 g yükleme aynı noktaya daha hızlı götürür, daha yükseğe değil.", "n": "Bu yüzden bir günü kaçırmanın ölçülebilir sonucu yok. Çizelgede kayıt satırı olmasının sebebi bu — puanını düşürmesi anlamsız olurdu."}, {"c": "Kreatin", "k": "1-2", "ku": "kg — hücre içi su", "h": "Tartıdaki 1-2 kg", "t": "Kreatin hücre içi su tutulumu yapar; başlangıçta 1-2 kg tartı artışı normaldir. Bu yağ değil, kas içi su.", "n": "Kesim sırasında bu artış yağ kaybını maskeleyebilir. Kreatine yeni başladıysan ilk 2-3 haftanın tartı verisini yorumlama."}, {"c": "Protein", "k": "1,6-2,2", "ku": "g/kg protein", "h": "Açıkta üst banda yak", "t": "Kesimde yağsız kütle korumak için yaygın öneri aralığı 1,6-2,2 g/kg. Açık derinleştikçe ve antrenman hacmi arttıkça üst uca yaklaşmak mantıklı.", "n": "84 kg için bu 134-185 g. Çizelgedeki 170 g hedefi aralığın üst kısmında — açık verirken doğru yer."}, {"c": "Protein", "k": "0,3", "ku": "g/kg — öğün başına eşik", "h": "Öğün başına eşik var", "t": "Kas protein sentezini uyarmak için öğün başına yaklaşık 0,3 g/kg gerekiyor; günü 3-5 öğüne yaymak tek öğünde toplamayı geçiyor.", "n": "84 kg için öğün başına ~25 g. Nöbette bunu tutturmak zor — bu yüzden hazır kaynak (whey, süzme peynir) nöbet çantasında olmalı."}, {"c": "Antrenman", "k": "↓", "ku": "yağsız kütle kaybı", "h": "Direnç antrenmanı açığın yönünü değiştirir", "t": "Kalori açığında direnç antrenmanı + yüksek protein, kaybın yağsız kütle payını belirgin şekilde düşürüyor. Antrenmansız açıkta kaybın önemli kısmı kas olur.", "n": "Kesim sırasında yeni rekor kırmayı hedefleme; mevcut ağırlıkları korumayı hedefle. Performansın korunması, kasın korunduğunun en iyi vekil göstergesi."}, {"c": "Antrenman", "k": "4×6", "ku": "seans/hafta × hafta", "h": "Minimum doz: 4 seans, 6 hafta", "t": "Yeni spor salonu üyeleri üzerindeki takipte, kendi kendini sürdüren bir alışkanlık için minimum eşik en az altı hafta boyunca haftada dört seans çıktı. Bu noktadan sonra devam, bilinçli planlamadan çok bağlamsal tetikleyicilere bağlanıyor.", "n": "Ama: seansın keyifli olması da ölçülebilir fark yaratıyor. Her seansı işkenceye çeviren program, tekrar sayısı yeterli olsa bile alışkanlık üretmiyor."}, {"c": "Antrenman", "k": "~5", "ku": "% — seans sonrası ek yakım", "h": "EPOC abartılıyor", "t": "Antrenman sonrası yükselmiş oksijen tüketiminin toplam günlük katkısı genellikle onlarca kaloriyle sınırlı — seansta yakılanın küçük bir yüzdesi.", "n": "Kesimin motoru açığın kendisi. 'Metabolizmayı hızlandıran antrenman' anlatısı, aritmetiğin yerini tutmaz."}, {"c": "Metabolizma", "k": "100-300", "ku": "kcal — beklenenin ötesi", "h": "Adaptif termojenez gerçek ama abartılı", "t": "Kilo verdikçe harcama düşer. Bunun bir kısmı beklenen (daha küçük vücut daha az yakar), bir kısmı beklenenin ötesinde. İkinci kısma adaptif termojenez deniyor ve genelde birkaç yüz kaloriyle sınırlı.", "n": "Yani metabolizman 'bozulmaz'. Ama 6. ayda aynı kalorinin aynı sonucu vermemesi normaldir, senin hatan değil."}, {"c": "Metabolizma", "k": "2000", "ku": "kcal — kişiler arası fark", "h": "NEAT sessiz değişkendir", "t": "Egzersiz dışı hareket — yürüme, ayakta durma, kıpırdanma — kişiler arasında günde yüzlerce kalori fark yaratabilir. Ve açık verirken bilinçsizce düşer.", "n": "Nöbet günlerinde NEAT'in tavan yapıyor, boş günlerde çöküyor. 'Aynı kalori, farklı gün' meselesinin büyük kısmı bu."}, {"c": "Vardiya", "k": "↓", "ku": "glukoz toleransı", "h": "Gece vardiyası metabolik olarak nötr değil", "t": "Vardiyalı çalışma, sirkadiyen ritmi bozarak glukoz toleransı ve iştah düzenlemesi üzerinde ölçülebilir olumsuz etkiler gösteriyor. Aynı kalori, farklı saatte farklı işleniyor.", "n": "Pratik çıkarım: nöbette geç saatteki büyük öğünü ikiye böl. Toplamı değiştirmesen bile yükü dağıtmak işine yarar."}, {"c": "Alışkanlık", "k": "18-254", "ku": "gün · medyan 66", "h": "66 gün bir medyan, bir kural değil", "t": "Lally 2010: otomatikliğe ulaşma süresi 18 ile 254 gün arasında değişti, medyan 66 gün. Basit davranışlar hızlı, karmaşık olanlar çok daha yavaş otomatikleşti.", "n": "'21 günde alışkanlık' iddiası bu veriyle çelişiyor. 20 dakikalık okuma ile 2,5 litre su aynı takvimde değil."}, {"c": "Alışkanlık", "k": "<0,5", "ku": "puan — tek kaçırmanın etkisi", "h": "Bir günü kaçırmak bozmuyor", "t": "Aynı çalışmada bir fırsatı kaçırmak otomatiklik puanını yarım puandan az düşürdü ve puanlar hızla toparlandı. Süreci bozan tek tek kaçırmalar değil, tekrarlayan kaçırmalar.", "n": "Çizelgendeki '2 gün üst üste' sayacının dayanağı bu. Zincir kırıldı diye bütün ayı çöpe atmak veriyle desteklenmiyor."}, {"c": "Alışkanlık", "k": "10", "ku": "gün/ay bağlam değişimi", "h": "Bağlam istikrarı senin zayıf noktan", "t": "Otomatiklik, davranışın istikrarlı bir bağlamda tekrarlanmasıyla gelişiyor. Sabah pratikleri ve kişinin kendi seçtiği alışkanlıklar ölçülebilir şekilde daha güçlü çıkıyor.", "n": "Ayda 10 gün bağlamın tamamen değişiyor. Bu yüzden gün tipine göre satır ayrımı süs değil, yöntemin bu profile uyarlanmış hâli."}, {"c": "Ölçüm", "k": "2×", "ku": "kayıt tutanın avantajı", "h": "Ölçmek tek başına etki üretiyor", "t": "Davranışını tutarlı biçimde kaydeden insanlar, kaydetmeyenlere göre ölçülebilir şekilde daha iyi sonuç alıyor. Kayıt, müdahaleden bağımsız bir etki taşıyor.", "n": "Ama: eksik kayıt yanıltıcı. Çizelgende 'uyum %80' ile 'uyum %80 · 18/30 gün kayıtlı' aynı şey değil. İkinci sayıya bak."}, {"c": "Yağ kaybı", "k": "0,4-0,8", "ku": "kg/hafta — 84 kg için", "h": "Haftada 1 kg üst sınır", "t": "Kesimde yaygın öneri, haftalık kaybı vücut ağırlığının %0,5-1'i ile sınırlamak. 84 kg için haftada 0,4-0,8 kg. Daha hızlısı yağsız kütle kaybı oranını yükseltiyor.", "n": "Senin 600 kcal açığın teorik olarak haftada ~0,55 kg. Aralığın ortasında. Daha hızlı düşüyorsan açık sandığından derin demektir."}, {"c": "Yağ kaybı", "k": "2/2", "ku": "hafta açık / idame", "h": "Diyet arası bir teknik, bir kaçış değil", "t": "Aralıklı diyet protokollerinde (2 hafta açık / 2 hafta idame döngüsü), sürekli açığa kıyasla benzer veya daha iyi yağ kaybı ve daha az adaptif düşüş bildirildi.", "n": "Ama: bu, 2 kg'lık kısa bir kesimde gereksiz. Uzayan kesimlerde ve platolarda anlamlı."}, {"c": "Vardiya", "k": "≠0", "ku": "telafi tam değil", "h": "Uyku borcu tamamen geri ödenmiyor", "t": "Kısa uyku sonrası hafta sonu telafisi, dikkat ve metabolik göstergelerin tamamını başlangıç seviyesine döndürmüyor. Borcun bir kısmı kalıcı.", "n": "Pratik: nöbet gecesinde 90 dakikalık kesintisiz bir blok, dağınık 3 saatten daha değerli. Tam uyku döngüsü ~90 dakika."}, {"c": "Ölçüm", "k": "10-20", "ku": "% kayıt sapması", "h": "Kalori sayımının kendi hata payı var", "t": "Etiket değerlerinde yasal tolerans payı, porsiyon tahmininde ve pişirme kaybında sistematik sapma var. Kaydedilen ile alınan arasında %10-20 fark olağan.", "n": "Bu yüzden mutlak sayıya değil, kendi kaydının kendi içindeki tutarlılığına güven. 1900 yazıp kilo düşmüyorsan gerçek sayı 1900 değildir."}, {"c": "Protein", "k": "20-30", "ku": "% termik etki", "h": "Fazla protein yağa dönmüyor demek yanlış", "t": "Proteinin termik etkisi (%20-30) karbonhidrat ve yağdan yüksek, yani net kalorisi düşük. Ama sıfır değil. Aşırı protein de açığı kapatır.", "n": "Pratikte 2,2 g/kg üzeri, kesim için ek fayda göstermiyor; sadece diğer makrolardan yer çalıyor."}, {"c": "Antrenman", "k": "↓", "ku": "hacim · = yoğunluk", "h": "Kesimde hacim, yoğunluktan önce düşer", "t": "Açıkta toparlanma kapasitesi düşer. Ağırlığı korumak (yoğunluk) kas korumada belirleyici; set sayısını (hacim) makul düzeyde azaltmak genelde bedelsiz.", "n": "HIT zaten düşük hacimli. Senin durumunda risk hacim değil, uykusuz günde maksimum yoğunluk denemek."}, {"c": "Kardiyo", "k": "20-30", "ku": "dk düşük şiddet", "h": "Düşük şiddet, açığın hizmetkârıdır", "t": "Düşük şiddetli sürekli kardiyo toparlanmaya en az müdahale eden açık artırma yöntemi. Yüksek şiddetli aralıklar aynı kaloriyi daha kısa sürede yakar ama direnç antrenmanının toparlanmasıyla yarışır.", "n": "20-30 dakikalık tempolu yürüyüş, kesim boyunca sürdürülebilirlik açısından koşudan üstün — özellikle nöbet döngüsü içinde."}, {"c": "Yağ kaybı", "k": "2-3", "ku": "hafta = plato değil", "h": "Plato çoğu zaman plato değil", "t": "İki-üç hafta durağan tartı, çoğunlukla su tutulumu ve kayıt kaymasının birleşimi. Gerçek metabolik plato daha uzun sürelerde ve daha derin açıklarda ortaya çıkıyor.", "n": "Önce kaydını denetle, sonra kaloriyi düşür. Ters sıra, gereksiz yere derinleşen bir açık üretir."}, {"c": "Uyku", "k": "20 / 90", "ku": "dakika — iki doğru süre", "h": "Şekerleme penceresi keyfî değil", "t": "Uyku döngüsü ortalama 90 dakika. 20-30 dakikalık kısa şekerleme derin uykuya girmeden biter ve uyanma sersemliği yaratmaz; 90 dakikalık tam döngü de öyle. Aradaki 45-60 dakika en kötü seçenek.", "n": "Nöbette 20 dakikan varsa 20 dakika uyu. 45 dakikan varsa yine 20 dakika uyu."}, {"c": "Ölçüm", "k": "±2", "ku": "kg günlük salınım", "h": "Tartı, kilo değil hacim ölçer", "t": "Ağırlık glikojen, tuz, su ve bağırsak içeriğiyle gün içinde iki kilograma varan salınım gösterebilir. Bu değişimin hiçbiri doku değil.", "n": "Yağ dokusu bir günde ne 1 kg artar ne azalır. Tek günlük tartıya bakıp kalori değiştirmek, gürültüye tepki vermektir."}, {"c": "Protein", "k": "20-30", "ku": "% proteinin termik etkisi", "h": "Protein kalorisi ucuz değil, sadece indirimli", "t": "Proteinin sindirimi ve işlenmesi, içerdiği enerjinin yaklaşık dörtte birini tüketiyor; karbonhidratta bu oran %5-10, yağda %0-3.", "n": "Yine de sıfır değil. 'Protein serbest' anlayışı açığı kapatır. 2,2 g/kg üzeri kesimde ek fayda göstermiyor."}, {"c": "Kardiyo", "k": "10.000", "ku": "adım — kaynağı pazarlama", "h": "Adım hedefinin bilimsel bir temeli yok", "t": "10.000 rakamı 1965'te Japonya'da bir pedometre markasının isminden geliyor. Sonraki araştırmalar, ölüm riskindeki düşüşün büyük kısmının günde 7.000-8.000 adım civarında elde edildiğini gösterdi.", "n": "Yani 10.000'i tutturamadığın gün başarısız değilsin. Eşik sandığından aşağıda ve marjinal fayda o noktadan sonra hızla azalıyor."}, {"c": "Uyku", "k": "90", "ku": "dakika — bir uyku döngüsü", "h": "Şekerlemede süre seçimi keyfî değil", "t": "Tam bir uyku döngüsü ortalama 90 dakika sürüyor. 20-25 dakikalık kısa şekerleme derin uykuya girmeden biter; 90 dakikalık şekerleme döngüyü tamamlayarak biter.", "n": "Aradaki 40-60 dakika en kötü seçenek: derin uykunun ortasında uyanmak sersemlik yaratıyor. Nöbette 45 dakikan varsa yine 20 dakika uyu."}, {"c": "Metabolizma", "k": "2.000", "ku": "kcal — NEAT'in kişiler arası farkı", "h": "Hareket ettiğini sandığın kadar hareket etmiyorsun", "t": "Egzersiz dışı hareket — yürüme, ayakta durma, kıpırdanma — kişiler arasında günde iki bin kaloriye varan fark yaratabiliyor. Ve kalori açığında bilinçsizce düşüyor.", "n": "Bu yüzden açık verirken adım sayın da düşer. Aynı 1900 kcal, üçüncü haftada ikinci haftadakiyle aynı açığı üretmez."}, {"c": "Yağ kaybı", "k": "0,5-1", "ku": "% vücut ağırlığı / hafta", "h": "Hız üst sınırı", "t": "Kesimde haftalık kaybın vücut ağırlığının %0,5-1'iyle sınırlanması yaygın öneri. 84 kg için haftada 0,4-0,8 kg.", "n": "Daha hızlısı kaybın yağsız kütle payını yükseltiyor. Senin 600 kcal açığın teorik olarak haftada ~0,55 kg — aralığın ortasında."}, {"c": "Kreatin", "k": "28", "ku": "gün — yüklemesiz doygunluk", "h": "Kreatin bir günlük ilaç değil, bir depo", "t": "Kas içi kreatin havuzu günde 3-5 g ile yaklaşık dört haftada doyuma ulaşıyor. 5-7 gün boyunca günde ~20 g yükleme aynı noktaya daha hızlı götürüyor, daha yükseğe değil.", "n": "Bir günü kaçırmanın ölçülebilir sonucu yok. Çizelgede kayıt satırı olmasının sebebi bu — puanını düşürmesi fizyolojiyle çelişirdi."}, {"c": "Vardiya", "k": "24", "ku": "saat uyanıklık ≈ 0,10 promil", "h": "Nöbet sonu bilişsel performans", "t": "17-19 saat kesintisiz uyanıklık sonrası performans, yasal sürüş sınırının üzerindeki kan alkol düzeyine denk bilişsel bozulma gösteriyor; 24 saatte etki daha da büyüyor.", "n": "Çıkış günü ağır antrenman, önemli finansal karar ve uzun yol — üçü de bu pencerede en kötü fikirler."}, {"c": "Alışkanlık", "k": "4", "ku": "hafta — ilk gerçek değerlendirme", "h": "Erken vazgeçmenin maliyeti", "t": "Otomatikliğin ilk ölçülebilir sıçraması genellikle ilk üç-dört haftada görülüyor. Bu eşiğin altında bırakılan davranış, hiç başlanmamış sayılıyor.", "n": "Çizelgeni ilk 30 gün değiştirmeden taşı. Veri olmadan yapılan düzenleme, düzenleme değil kaçıştır."}, {"c": "Ölçüm", "k": "10-20", "ku": "% kalori kaydı sapması", "h": "Yazdığın sayı, yediğin sayı değil", "t": "Etiket toleransları, porsiyon tahmini ve pişirme kaybı birleşince kaydedilen ile alınan kalori arasında sistematik fark oluşuyor. Sapma neredeyse her zaman eksik yönde.", "n": "Bu yüzden mutlak sayıya değil kendi kaydının tutarlılığına güven. 1900 yazıp kilo düşmüyorsan gerçek sayı 1900 değildir."}, {"c": "Antrenman", "k": "2-3", "ku": "% haftalık güç kaybı riski", "h": "Kesimde performans, kasın vekilidir", "t": "Açıkta yağsız kütle kaybının en erken işareti tartı değil, ağırlıkların gerilemesi. Performansın korunması kasın korunduğunun en pratik göstergesi.", "n": "Ama tek seans dalgalanması sinyal değil. İki hafta üst üste aynı yönde geriliyorsa kaloriyi yükselt."}, {"c": "Uyku", "k": "55", "ku": "% — kaybın yağ olan oranındaki düşüş", "h": "Uykusuzluk açığın yönünü çeviriyor", "t": "Nedeltcheva 2010: aynı kalori kısıtlaması altında 14 gün. 5,5 saat uyku fırsatı, kaybın yağ olan oranını %55 düşürdü (1,4 kg → 0,6 kg) ve yağsız kütle kaybını %60 artırdı (1,5 kg → 2,4 kg).", "n": "Çalışma 10 kişilik ve iki haftalık; etki büyüklüğü kesin değil. Ama yön birden fazla çalışmada tutarlı ve nöbet tutan biri için en pahalı bulgu bu."}, {"c": "Metabolizma", "k": "3", "ku": "% vücut suyu kaybı ≈ performans düşüşü", "h": "Dehidrasyon nöbette sessizce birikiyor", "t": "Vücut ağırlığının yaklaşık %2-3'ü kadar sıvı kaybı, dayanıklılık ve bilişsel performansta ölçülebilir düşüş üretiyor. 84 kg için bu 1,7-2,5 litre.", "n": "24 saatlik vardiyada su içmeyi unutmak bu eşiği kolayca aşırır. Ve o düşüşü uykusuzluğa yorarsın."}, {"c": "Yağ kaybı", "k": "3", "ku": "g su — 1 g glikojen başına", "h": "İlk haftanın hızlı düşüşü yağ değil", "t": "Kas ve karaciğerde depolanan her gram glikojen yaklaşık üç gram su bağlıyor. Kesimin ilk günlerinde glikojen düştükçe bağlı su da gidiyor.", "n": "Bu yüzden ilk hafta 1-2 kg düşmek normal ve aldatıcı. Gerçek yağ kaybı eğrisi ikinci haftadan itibaren okunur."}];
+var mIx=0,iIx=0,mCat='',iCat='';
+function dayseed(){return Math.floor((today()-new Date(2020,0,1))/86400000)}
+function pickDaily(arr){return dayseed()%arr.length}
+function fmtDate(){var d=today();return d.getDate()+' '+AY[d.getMonth()]}
+
+function mList(){return mCat?MIND.filter(function(x){return x.c===mCat}):MIND}
+function iList(){return iCat?INFO.filter(function(x){return x.c===iCat}):INFO}
+
+function ticks(id,n,ix,acc){
+  var b=document.getElementById(id),h='',i;
+  for(i=0;i<n;i++)h+='<i class="'+(i===ix?'on':'')+'"></i>';
+  b.innerHTML=h;b.style.setProperty('--acc',acc||'#C7A96B');
+}
+function drawMind(){
+  var L=mList(); if(!L.length)return;
+  var ix=mIx%L.length,it=L[ix];
+  var el=document.getElementById('mCard');
+  el.dataset.cat=it.c;
+  el.innerHTML='<div class="cat"></div><div class="body"></div><div class="rule"></div>'+
+               '<div class="src"><b></b><span></span></div>';
+  el.querySelector('.cat').textContent=it.c;
+  el.querySelector('.body').textContent=it.t;
+  var parts=it.s.split(', ');
+  el.querySelector('.src b').textContent=parts[0];
+  el.querySelector('.src span').textContent=parts.slice(1).join(', ');
+  el.classList.remove('anim');void el.offsetWidth;el.classList.add('anim');
+  ticks('mTicks',L.length,ix,getComputedStyle(el).getPropertyValue('--acc'));
+  document.getElementById('mCount').textContent=(ix+1)+' / '+L.length;
+}
+function drawInfo(){
+  var L=iList(); if(!L.length)return;
+  var ix=iIx%L.length,it=L[ix];
+  var el=document.getElementById('iCard');
+  el.innerHTML='<div class="cat"></div><div class="big"></div><div class="unit"></div>'+
+               '<h3></h3><div class="fact"></div>'+
+               '<div class="lim"><span class="k">sınır</span><p></p></div>';
+  el.querySelector('.cat').textContent=it.c;
+  el.querySelector('.big').textContent=it.k;
+  el.querySelector('.unit').textContent=it.ku;
+  el.querySelector('h3').textContent=it.h;
+  el.querySelector('.fact').textContent=it.t;
+  el.querySelector('.lim p').textContent=it.n;
+  el.classList.remove('anim');void el.offsetWidth;el.classList.add('anim');
+  ticks('iTicks',L.length,ix,'#E0A33E');
+  document.getElementById('iCount').textContent=(ix+1)+' / '+L.length;
+}
+function buildFilters(){
+  function cats(arr){var s=[],i;for(i=0;i<arr.length;i++)if(s.indexOf(arr[i].c)<0)s.push(arr[i].c);return s}
+  function fill(id,list,cur,set){
+    var box=document.getElementById(id);box.innerHTML='';
+    var all=['Hepsi'].concat(cats(list));
+    all.forEach(function(c){
+      var v=(c==='Hepsi')?'':c;
+      var b=document.createElement('button');
+      b.textContent=c;b.setAttribute('aria-pressed',String(v===cur()));
+      b.onclick=function(){set(v);buildFilters()};
+      box.appendChild(b);
+    });
+  }
+  fill('mFilter',MIND,function(){return mCat},function(v){mCat=v;mIx=pickDaily(mList());drawMind()});
+  fill('iFilter',INFO,function(){return iCat},function(v){iCat=v;iIx=pickDaily(iList());drawInfo()});
+}
+function showView(v){
+  ['sheet','mind','info'].forEach(function(n){
+    document.getElementById('v-'+n).hidden=(n!==v);
+  });
+  [].forEach.call(document.querySelectorAll('.tabs button'),function(b){
+    b.setAttribute('aria-selected',String(b.dataset.v===v));
+  });
+  if(v==='sheet')delete document.body.dataset.field; else document.body.dataset.field=v;
+  S.view=v;save();
+  window.scrollTo(0,0);
+}
+[].forEach.call(document.querySelectorAll('.tabs button'),function(b){
+  b.onclick=function(){showView(b.dataset.v)};
+});
+document.getElementById('mCard').onclick=function(){mIx=(mIx+1)%mList().length;drawMind()};
+document.getElementById('iCard').onclick=function(){iIx=(iIx+1)%iList().length;drawInfo()};
+document.getElementById('mNext').onclick=function(){mIx=(mIx+1)%mList().length;drawMind()};
+document.getElementById('mToday').onclick=function(){mIx=pickDaily(mList());drawMind()};
+document.getElementById('iNext').onclick=function(){iIx=(iIx+1)%iList().length;drawInfo()};
+document.getElementById('iToday').onclick=function(){iIx=pickDaily(iList());drawInfo()};
+
+var saveT;function save(){clearTimeout(saveT);saveT=setTimeout(function(){store.set(JSON.stringify(S))},180)}
+
+store.get().then(function(v){
+  if(v){try{S=Object.assign({},DEFAULT,JSON.parse(v))}catch(e){}}
+  if((S.v||0)<5){
+    S.habits=JSON.parse(JSON.stringify(DEFAULT.habits));
+    S.quotas=JSON.parse(JSON.stringify(DEFAULT.quotas));
+    S.v=5;save();
+  }
+  entry(TK,true);applyTheme();renderAll();
+  mIx=pickDaily(MIND);iIx=pickDaily(INFO);
+  document.getElementById('mDate').textContent=fmtDate();
+  document.getElementById('iDate').textContent=fmtDate();
+  buildFilters();drawMind();drawInfo();
+  showView(S.view||'sheet');
+}).catch(function(){entry(TK,true);applyTheme();renderAll()});
+
+})();
+</script>
+</body>
+</html>
