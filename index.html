@@ -486,6 +486,7 @@ var DEFAULT={
     {id:'h5',n:'Protein 170 g',on:['normal','nobet','cikis']},
     {id:'h6',n:'Kardiyo 20+ dk',on:['normal','cikis']},
     {id:'h7',n:'20 dk okuma',on:['normal','cikis']},
+    {id:'h10',n:'Ekransız 20 dk',on:['normal','cikis']},
     {id:'h8',n:'Antrenman',on:['normal','cikis'],log:true},
     {id:'h9',n:'Kreatin',on:['normal','nobet','cikis'],log:true}
   ],
@@ -495,7 +496,7 @@ var DEFAULT={
     {id:'q3',n:'Bütçe kontrolü',t:1},
     {id:'q4',n:'Slow Days içerik',t:2}
   ],
-  v:5,
+  v:6,
   log:{},wk:{},reviewed:'',theme:'paper'
 };
 var S=JSON.parse(JSON.stringify(DEFAULT));
@@ -900,10 +901,10 @@ var saveT;function save(){clearTimeout(saveT);saveT=setTimeout(function(){store.
 
 store.get().then(function(v){
   if(v){try{S=Object.assign({},DEFAULT,JSON.parse(v))}catch(e){}}
-  if((S.v||0)<5){
+  if((S.v||0)<6){
     S.habits=JSON.parse(JSON.stringify(DEFAULT.habits));
     S.quotas=JSON.parse(JSON.stringify(DEFAULT.quotas));
-    S.v=5;save();
+    S.v=6;save();
   }
   entry(TK,true);applyTheme();renderAll();
   mIx=pickDaily(MIND);iIx=pickDaily(INFO);
