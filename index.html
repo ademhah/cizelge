@@ -113,6 +113,7 @@ section{margin:22px 0}
 .tdots i{width:13px;height:13px;border-radius:50%;background:rgba(255,255,255,.10);transition:all .2s}
 .tdots i.on{background:#FF7A30;box-shadow:0 0 10px rgba(255,122,48,.55)}
 .tdots i.ex{background:transparent;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35)}
+.tdots i.no{background:rgba(255,255,255,.28)}
 .fl .fv{font-family:var(--disp);font-size:34px;font-weight:300;letter-spacing:-.04em;line-height:1;margin-top:14px}
 .fl .fd{display:flex;gap:6px;margin-top:12px}
 .fl .fd i{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.55)}
@@ -128,12 +129,18 @@ section{margin:22px 0}
 .grp{margin:20px 0 0}
 .grp .lab{margin:0 2px 10px}
 .task{position:relative;display:flex;align-items:center;gap:13px;width:100%;
-  padding:15px 48px 15px 15px;margin-bottom:8px;border:0;border-radius:18px;
+  padding:15px 84px 15px 15px;margin-bottom:8px;border:0;border-radius:18px;
   background:var(--card);box-shadow:var(--shadow);color:inherit;font:inherit;text-align:left;cursor:pointer;overflow:hidden;
   transition:background .18s,transform .1s}
 .task:active{transform:scale(.99)}
 .task[data-st="on"]{background:var(--orBg)}
 .task[data-st="ex"]{background:#F3F2EF}
+.task[data-st="no"]{background:#F3F2EF}
+.task[data-st="no"] .tick{background:#8E8A83;border-color:#8E8A83}
+.task[data-st="no"] .tick::before,.task[data-st="no"] .tick::after{content:'';position:absolute;left:10px;top:5px;width:2.4px;height:12px;
+  background:#fff;border:0;border-radius:2px;opacity:1;transform:rotate(45deg)}
+.task[data-st="no"] .tick::after{transform:rotate(-45deg)}
+.task[data-st="no"] .tn{color:var(--ink3)}
 .tick{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);position:relative;transition:all .18s}
 .task[data-st="on"] .tick{background:var(--grad);border-color:transparent;box-shadow:0 4px 10px -3px rgba(242,92,25,.6)}
 .tick::after{content:'';position:absolute;left:8px;top:4px;width:6px;height:11px;border:solid #fff;border-width:0 2.4px 2.4px 0;
@@ -147,19 +154,24 @@ section{margin:22px 0}
 .task[data-st="on"] .tn{color:var(--orD)}
 .task[data-st="ex"] .tn{color:var(--ink3)}
 .tx{flex:0 0 auto;font-size:11px;font-weight:700;color:var(--orD);background:var(--orBg);border-radius:999px;padding:4px 9px}
+.xbtn{position:absolute;right:42px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;
+  background:transparent;color:var(--ink3);font:inherit;font-size:15px;font-weight:700;cursor:pointer;z-index:3;
+  display:flex;align-items:center;justify-content:center}
+.xbtn:active{background:var(--line2)}
+.task[data-st="no"] .xbtn{background:#8E8A83;color:#fff}
 .nbtn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;
   background:transparent;color:var(--ink3);font:inherit;font-size:12px;font-weight:800;cursor:pointer;z-index:3}
 .nbtn,.cadd,.cminus{display:flex;align-items:center;justify-content:center}
 .nbtn:active{background:var(--line2)}
 .task[data-st="ex"] .nbtn{background:var(--dk);color:#fff}
-.task.cnt{padding-right:130px}
+.task.cnt{padding-right:168px}
 .task.cnt>.fill{position:absolute;left:0;top:0;bottom:0;z-index:0;background:linear-gradient(90deg,rgba(255,138,61,.10),rgba(242,92,25,.22));
   transition:width .35s cubic-bezier(.2,.7,.2,1)}
 .task.cnt>.tick,.task.cnt>.tn,.task.cnt>.cval{position:relative;z-index:1}
 .cval{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink2);white-space:nowrap}
-.cadd{position:absolute;right:44px;top:50%;transform:translateY(-50%);height:32px;padding:0 11px;border:0;border-radius:999px;
+.cadd{position:absolute;right:80px;top:50%;transform:translateY(-50%);height:32px;padding:0 11px;border:0;border-radius:999px;
   background:var(--dk);color:#fff;font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;z-index:3}
-.cminus{position:absolute;right:102px;top:50%;transform:translateY(-50%);width:28px;height:32px;border:0;background:transparent;
+.cminus{position:absolute;right:138px;top:50%;transform:translateY(-50%);width:28px;height:32px;border:0;background:transparent;
   color:var(--ink3);font-size:18px;line-height:1;cursor:pointer;z-index:3}
 .logs{display:flex;gap:8px;flex-wrap:wrap}
 .lchip{display:flex;align-items:center;gap:9px;background:var(--card);border:0;border-radius:999px;box-shadow:var(--shadow);
@@ -221,6 +233,9 @@ table.ch+table.ch{border-top:10px solid var(--bg)}
 .cl.x{background:#EEECE8}
 .cl.x::before,.cl.x::after{content:'';position:absolute;left:6.5px;top:3.5px;width:2px;height:8px;background:#A9A59E;border-radius:1px}
 .cl.x::before{transform:rotate(45deg)}.cl.x::after{transform:rotate(-45deg)}
+.cl.xx{background:#8E8A83}
+.cl.xx::before,.cl.xx::after{content:'';position:absolute;left:6.5px;top:3.5px;width:2px;height:8px;background:#fff;border-radius:1px}
+.cl.xx::before{transform:rotate(45deg)}.cl.xx::after{transform:rotate(-45deg)}
 .cl.ex{background:var(--dk);color:#fff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:800;line-height:15px;text-align:center}
 .cl.na{width:7px;height:2px;border-radius:0;background:var(--line)}
 .ch tr.sc td{height:28px;font-size:11px;font-weight:600;border-top:1px solid var(--line);border-bottom:0;color:var(--ink3)}
@@ -237,7 +252,7 @@ table.ch+table.ch{border-top:10px solid var(--bg)}
 .leg{display:flex;flex-wrap:wrap;gap:8px 14px;padding:13px 15px;border-top:1px solid var(--line2);font-size:11.5px;color:var(--ink3);align-items:center}
 .leg span{display:flex;align-items:center;gap:6px}
 .leg i{width:13px;height:13px;border-radius:4px;display:block}
-.leg i.g{background:var(--grad)}.leg i.r{background:#EEECE8}.leg i.e{background:var(--dk)}
+.leg i.g{background:var(--grad)}.leg i.r{background:#EEECE8}.leg i.e{background:var(--dk)}.leg i.x{background:#8E8A83}
 .leg i.b{background:var(--or);height:4px;border-radius:2px}
 .leg i.s{background:linear-gradient(90deg,#FDE3D2,#FBB98F,#F5874D,#E2591B);width:30px}
 
@@ -551,12 +566,12 @@ button:focus-visible,input:focus-visible,[contenteditable]:focus-visible{outline
     <div class="chartbox">
       <div class="cscroll" id="chart"></div>
       <div class="leg">
-        <span><i class="g"></i>yapıldı</span><span><i class="r"></i>yapılmadı</span>
-        <span><i class="e"></i>N · mazeretli</span><span><i class="b"></i>nöbet</span>
+        <span><i class="g"></i>yapıldı</span><span><i class="x"></i>yapılmadı</span>
+        <span><i class="r"></i>boş kaldı</span><span><i class="e"></i>N · mazeretli</span><span><i class="b"></i>nöbet</span>
         <span><i class="s"></i>günlük puan</span>
       </div>
     </div>
-    <div class="hint">Hücreye dokun: yapıldı → N → boş. Gün numarasına dokun: gün tipi değişir. N işaretli satır o günün puanına girmez.</div>
+    <div class="hint">Hücreye dokun: yapıldı → ✕ yapılmadı → N mazeretli → boş. Geçmiş günlerde boş bıraktığın satırlar da açık çarpıyla görünür. Gün numarasına dokun: gün tipi değişir. N işaretli satır o günün puanına girmez.</div>
     <div class="btnrow"><button class="btn" id="moreBtn">Önceki ay</button></div>
   </section>
 
@@ -855,7 +870,7 @@ function cores(){return S.habits.filter(function(h){return h.core&&!h.log})}
 function progs(){return S.habits.filter(function(h){return !h.core&&!h.log})}
 function logsOf(){return S.habits.filter(function(h){return h.log})}
 function stOf(e,h){var v=e&&e.d[h.id];
-  if(v==='n')return 'ex'; if(!v)return '';
+  if(v==='n')return 'ex'; if(v==='x')return 'no'; if(!v)return '';
   if(h.cnt)return v>=h.cnt?'on':'half'; return 'on'}
 function hit(e,h){return stOf(e,h)==='on'}
 function exc(e,h){return stOf(e,h)==='ex'}
@@ -870,7 +885,7 @@ function renderHead(){
   $('hW').textContent=isoWeek(d).split('-')[1].toLowerCase()+'. hafta';
   var c=cnt(TK,cores()),p=cnt(TK,progs());
   $('bigN').innerHTML=(c[0]+p[0])+'<small>/'+(c[1]+p[1])+'</small>';
-  var td='';cores().concat(progs()).forEach(function(h){var s=stOf(e,h);td+='<i class="'+(s==='on'?'on':s==='ex'?'ex':'')+'"></i>'});
+  var td='';cores().concat(progs()).forEach(function(h){var s=stOf(e,h);td+='<i class="'+(s==='on'?'on':s==='ex'?'ex':s==='no'?'no':'')+'"></i>'});
   $('tdots').innerHTML=td;
   var ok=c[1]>0&&c[0]===c[1];
   $('fV').textContent=ok?'Tamam':(c[0]+'/'+c[1]);
@@ -886,12 +901,13 @@ function taskEl(h,e,isCore){
   var b=document.createElement('button'),st=stOf(e,h);
   b.className='task'+(isCore?' core':'')+(h.cnt?' cnt':'');
   b.dataset.st=(st==='half'?'':st);
+  var XN='<span class="xbtn" role="button" aria-label="yapılmadı">✕</span><span class="nbtn" role="button" aria-label="mazeretli">N</span>';
   if(h.cnt){
     var v=(typeof e.d[h.id]==='number')?e.d[h.id]:0,step=h.step||1,pct=Math.round(v/h.cnt*100);
-    b.innerHTML='<span class="fill" style="width:'+(st==='ex'?0:pct)+'%"></span><span class="tick"></span><span class="tn"></span><span class="cval"></span>'+
-      '<span class="cminus" role="button" aria-label="azalt">−</span><span class="cadd" role="button">+'+step+'</span><span class="nbtn" role="button" aria-label="mazeretli">N</span>';
+    b.innerHTML='<span class="fill" style="width:'+(st==='ex'||st==='no'?0:pct)+'%"></span><span class="tick"></span><span class="tn"></span><span class="cval"></span>'+
+      '<span class="cminus" role="button" aria-label="azalt">−</span><span class="cadd" role="button">+'+step+'</span>'+XN;
     b.querySelector('.tn').textContent=h.n;
-    b.querySelector('.cval').textContent=(st==='ex')?'mazeretli':(nf(v*step)+' / '+nf(h.cnt*step)+' '+(h.unit||''));
+    b.querySelector('.cval').textContent=(st==='ex')?'mazeretli':st==='no'?'yapılmadı':(nf(v*step)+' / '+nf(h.cnt*step)+' '+(h.unit||''));
     var inc=function(){var x=(typeof e.d[h.id]==='number')?e.d[h.id]:0;e.d[h.id]=Math.min(h.cnt,x+1);save();renderAll()};
     b.onclick=inc;
     b.querySelector('.cadd').onclick=function(ev){ev.stopPropagation();inc()};
@@ -900,10 +916,11 @@ function taskEl(h,e,isCore){
   }else{
     var run=missRun(h.id);
     b.innerHTML='<span class="tick"></span><span class="tn"></span>'+(run>=2?'<span class="tx">'+run+' gün</span>':'')+
-      '<span class="nbtn" role="button" aria-label="mazeretli">N</span>';
+      XN;
     b.querySelector('.tn').textContent=h.n;
-    b.onclick=function(){if(e.d[h.id])delete e.d[h.id];else e.d[h.id]=1;save();renderAll()};
+    b.onclick=function(){if(e.d[h.id]===1)delete e.d[h.id];else e.d[h.id]=1;save();renderAll()};
   }
+  b.querySelector('.xbtn').onclick=function(ev){ev.stopPropagation();if(e.d[h.id]==='x')delete e.d[h.id];else e.d[h.id]='x';save();renderAll()};
   b.querySelector('.nbtn').onclick=function(ev){ev.stopPropagation();if(e.d[h.id]==='n')delete e.d[h.id];else e.d[h.id]='n';save();renderAll()};
   return b;
 }
@@ -942,8 +959,11 @@ function renderChart(){
       var k=td.dataset.k,hid=td.dataset.h;if(fromKey(k)>today())return;
       var e=entry(k,true),hb=S.habits.filter(function(x){return x.id===hid})[0];if(!hb)return;
       var v=e.d[hid];
-      if(hb.cnt){if(v==='n')delete e.d[hid];else if(v>=hb.cnt)e.d[hid]='n';else e.d[hid]=hb.cnt}
-      else{if(!v)e.d[hid]=1;else if(v===1)e.d[hid]='n';else delete e.d[hid]}
+      if(hb.log){if(v)delete e.d[hid];else e.d[hid]=1}
+      else if(v==='x')e.d[hid]='n';
+      else if(v==='n')delete e.d[hid];
+      else if(hb.cnt?(typeof v==='number'&&v>=hb.cnt):v===1)e.d[hid]='x';
+      else e.d[hid]=hb.cnt||1;
       save();renderAll()}});
   [].forEach.call(box.querySelectorAll('th[data-k]'),function(th){
     th.onclick=function(){var k=th.dataset.k;if(fromKey(k)>today())return;
@@ -966,6 +986,7 @@ function monthTable(y,m){
         if(bands[ix])cls.push('band');if(k===TK)cls.push('tdy');
         if(e){var st=stOf(e,hb);
           if(st==='ex')inner='<span class="cl ex">N</span>';
+          else if(st==='no')inner='<span class="cl xx"></span>';
           else if(st)inner='<span class="cl '+st+'"></span>';
           else if(!hb.log&&k<TK&&touched(e))inner='<span class="cl x"></span>'}
         h+='<td data-k="'+k+'" data-h="'+hb.id+'" class="'+cls.join(' ')+'">'+inner+'</td>'});
@@ -986,7 +1007,7 @@ function missRun(hid){
   if(!hb||hb.log)return 0;
   for(i=0;i<60;i++){var k=key(addDays(d,-i)),e=S.log[k];
     if(!e||!touched(e))continue;var st=stOf(e,hb);
-    if(st==='ex')continue;if(st==='on')break;run++}
+    if(st==='ex')continue;if(st==='on')break;if(i===0&&st!=='no')continue;run++}
   return run;
 }
 function renderStats(){
@@ -1457,8 +1478,8 @@ var tt;function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show'
 
 /* ================= HESAP & EŞİTLEME ================= */
 /* Supabase proje adresi ve anahtarı. Boş kalırsa giriş ekranında bir kez sorulur. */
-var SB_URL='';
-var SB_KEY='';
+var SB_URL='https://oekjqmkwnkakizjltkqf.supabase.co';
+var SB_KEY='sb_publishable_Am4FATWeprQi_xRjeJ06bw_yy4DMsku';
 var SKEY='cizelge:sync',CKEY='cizelge:sb',KKEY='cizelge:skip';
 var SY={sb:null,user:null,rev:0,base:null,busy:false,again:false,force:false,timer:null,state:'off'};
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
